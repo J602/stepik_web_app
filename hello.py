@@ -1,8 +1,5 @@
 # encoding: utf-8
-from multiprocessing import cpu_count
 
-bind = "127.0.0.1:8080"
-workers = cpu_count()
 
 def app(environ, start_response):
     query_str = environ.get('QUERY_STRING', '')
