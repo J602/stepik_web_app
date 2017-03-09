@@ -1,0 +1,10 @@
+CREATE DATABASE IF NOT EXISTS ask
+  DEFAULT CHARACTER SET utf8
+  DEFAULT COLLATE utf8_general_ci;
+
+CREATE USER IF NOT EXISTS 'django'@'localhost' IDENTIFIED BY 'django12345';
+
+GRANT ALL PRIVILEGES ON ask.* TO 'django'@'localhost';
+
+
+
