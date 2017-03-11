@@ -6,7 +6,7 @@
         <h3>{{ question.title }}</h3>
         <p>{{ question.text }}</p>
         <hr>
-        {% for answer in question.answers.all %}
+        {% for answer in answers %}
             <p>answer.text</p>
         {% endfor %}
 {% endblock %}

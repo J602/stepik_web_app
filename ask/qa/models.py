@@ -38,7 +38,8 @@ class Answer(models.Model):
 
     text = models.TextField()                               # text - текст ответа
     added_at = models.DateTimeField(auto_now_add=True)      # added_at - дата добавления ответа
-    question = models.ForeignKey(Question, related_name='answers', on_delete=models.CASCADE)  # question - вопрос, к которому относится ответ
+    # question = models.ForeignKey(Question, related_name='answers', on_delete=models.CASCADE)  # question - вопрос, к которому относится ответ
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)  # question - вопрос, к которому относится ответ
     author = models.ForeignKey(settings.AUTH_USER_MODEL)                        # author - автор ответа
 
     class Meta:

@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.decorators.http import require_GET, require_POST
-from .models import Question
+from .models import Question, Answer
 
 
 OBJECT_PER_PAGE = 10
@@ -46,10 +46,10 @@ def popular_list(request, *args, **kwargs):
 
 
 @require_GET
-def question_detail(request, *args, id=None):
+def question_detail(request, *args, **kwargs):
 
-    question = get_object_or_404(Question, pk=id)
-
-    context = {'question': question}
-
+    question_id = kwargs.get('id', None)
+    question = get_object_or_404(Question, pk=question_id)
+    answers = Answer.objects.filter(question=question)
+    context = {'question': question, 'answers': answers}
     return render(request, 'question.html', context)
