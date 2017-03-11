@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ask Pupkin</title>
+</head>
+<body>
+<header>
+    {% block head %}
+	    {% block title %}
+    {% endblock %}
+	    {% block menu %}{% endblock %}
+    {% endblock %}
+</header>
+
+{% block page %}
+
+	{% block content %}
+	{% endblock %}
+
+    {% block pagination %}
+    {% endblock %}
+
+{% endblock %}
+<footer>
+    {% block footer %}
+    	{% block copyright %}
+    	{% endblock %}
+    {% endblock %}
+</footer>
+</body>
+</html>

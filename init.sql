@@ -5,6 +5,7 @@ CREATE DATABASE IF NOT EXISTS ask
 CREATE USER IF NOT EXISTS 'django'@'localhost' IDENTIFIED BY 'django12345';
 
 GRANT ALL PRIVILEGES ON ask.* TO 'django'@'localhost';
+FLUSH PRIVILEGES;
 
 
 

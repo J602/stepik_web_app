@@ -3,4 +3,5 @@ init.txt
 logs
 __pycache__
 local_settings.py
+*.pyc
 
