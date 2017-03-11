@@ -21,7 +21,7 @@ class Question(models.Model):
     text = models.TextField()                               # text - полный текст вопроса
     added_at = models.DateTimeField(auto_now_add=True)      # added_at - дата добавления вопроса
     rating = models.IntegerField(default=0)                          # rating - рейтинг вопроса (число)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='author')                        # author - автор вопроса
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='author', blank=True, null=True)                        # author - автор вопроса
     likes = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='question_like_users', blank=True)       # likes - список пользователей, поставивших "лайк"
 
     class Meta:
@@ -40,7 +40,7 @@ class Answer(models.Model):
     added_at = models.DateTimeField(auto_now_add=True)      # added_at - дата добавления ответа
     # question = models.ForeignKey(Question, related_name='answers', on_delete=models.CASCADE)  # question - вопрос, к которому относится ответ
     question = models.ForeignKey(Question, on_delete=models.CASCADE)  # question - вопрос, к которому относится ответ
-    author = models.ForeignKey(settings.AUTH_USER_MODEL)                        # author - автор ответа
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)                        # author - автор ответа
 
     class Meta:
         verbose_name = 'Answer'

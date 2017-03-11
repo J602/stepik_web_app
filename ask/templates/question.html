@@ -7,6 +7,11 @@
         <p>{{ question.text }}</p>
         <hr>
         {% for answer in answers %}
-            <p>answer.text</p>
+            <p>{{ answer.text }}</p>
         {% endfor %}
+        <form action={% url 'question-detail' question.id %} method="post">
+            {% csrf_token %}
+            {{form.as_ul}}
+        <input type="submit" value="Submit">
+        </form>
 {% endblock %}
