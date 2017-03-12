@@ -5,8 +5,10 @@
 {% block content %}
         <h3>{{ question.title }}</h3>
         <p>{{ question.text }}</p>
+        <p>{{ question.author }}</p>
         <hr>
         {% for answer in answers %}
+            <p>{{ answer.author }}</p>
             <p>{{ answer.text }}</p>
         {% endfor %}
         <form action={% url 'question-detail' question.id %} method="post">

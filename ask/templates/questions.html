@@ -5,6 +5,7 @@
 {% block content %}
     {% for question in questions %}
         <h5>{{ question.title }}</h5>
+        <p>{{ question.author }}</p>
         <a href={% url 'question-detail' question.id %}> {{ question.title }} </a>
     {% endfor %}
 {% endblock %}
