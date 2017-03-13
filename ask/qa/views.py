@@ -1,10 +1,12 @@
 # encoding=utf-8
 import pprint
 
-from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import render, get_object_or_404, reverse, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_GET, require_POST
 
 from .models import Question, Answer
@@ -37,7 +39,7 @@ def paginate(request, object_list):
 def question_list(request, *args, **kwargs):
     qe_list = Question.objects.new()
     questions = paginate(request, qe_list)
-    context = {'questions': questions, 'title': 'Questions list page'}
+    context = {'questions': questions, 'title': 'New Questions'}
 
     return render(request, 'questions.html', context)
 
@@ -66,7 +68,7 @@ def question_detail(request, *args, **kwargs):
     context = {'question': question, 'answers': answers, 'form': AnswerForm, 'title': 'Question detail page'}
     return render(request, 'question.html', context)
 
-
+@login_required
 def ask_question(request, *args, **kwargs):
     if request.method == "GET":
         form = AskForm()
@@ -79,7 +81,7 @@ def ask_question(request, *args, **kwargs):
             question.author = request.user
             question.save()
             context = {'id': question.pk}
-            return redirect(reverse('question-detail', kwargs=context))
+            return redirect(reverse('qa:question-detail', kwargs=context))
 
 
 ##################################################
@@ -98,14 +100,14 @@ def singup(request, *args, **kwargs):
             new_user = form.save()
             login(request, user=new_user)
 
-        return redirect('question-list')
+        return redirect('qa:question-list')
 
 
 @require_GET
 def user_logout(request):
     logout(request)
     referer = request.META.get('HTTP_REFERER')
-    return redirect(referer or 'question-list')
+    return redirect(referer or 'qa:question-list')
 
 
 def user_login(request):
@@ -123,6 +125,6 @@ def user_login(request):
             if user is not None:
                 login(request, user)
             else:
-                return redirect('login')
+                return redirect('qa:login')
 
-            return redirect('question-list')
+            return redirect(referer or 'qa:question-list')

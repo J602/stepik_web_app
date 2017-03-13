@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content%}
-    <form action= {%url 'ask-question' %} method="post">
+    <form action= {%url 'qa:ask-question' %} method="post">
         {% csrf_token %}
         {{form.as_ul}}
         <input type="submit" value="Submit">

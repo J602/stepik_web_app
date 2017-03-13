@@ -2,39 +2,166 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Ask Pupkin</title>
+    <title>Out of Memory Error</title>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 <body>
+
 <header>
+
     {% block head %}
-	    {% block title %}
-        {% endblock %}
 
-        {% if user.is_authenticated %}
-            <h4>{{user}}</h4>
-            <a href="{% url 'logout' %}">Logout</a>
-        {% else %}
-            <a href="{% url 'singup' %}">Sing up</a>
-            <a href="{% url 'login' %}">Login</a>
-        {% endif %}
+        <nav class="navbar navbar-fixed-top navbar-collapse" style="background-color: white">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-11">
 
+                        {#                                                 #}
+                        {#                    Logo                         #}
+                        {#                                                 #}
+
+                        <a class="navbar-brand" href="{% url 'qa:question-list' %}"><span
+                                style="font-size: larger"><span
+                                style="font-size: larger">{ ? } </span>Out</span><span style="">of</span><span
+                                style="font-size: larger">Memory</span><span style="font-size: larger">Error</span>
+                        </a>
+
+                        {#                                                 #}
+                        {#                    login managment              #}
+                        {#                                                 #}
+
+                        <ul class="nav navbar-nav navbar-right">
+                            {% if user.is_authenticated %}
+
+                                <li><img style="width: 32px; height: 32px; margin-top: 9px"
+                                         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9cGgmE6g-rlUiNz9sLGl8YTt0m1yZfjTbuMWg6QQAhpm6trbF"
+                                         alt="..." class="img-rounded">
+                                </li>
+                                <li><a href="#">{{ user }}</a></li>
+                                <li><a href="{% url 'qa:logout' %}">Logout</a></li>
+
+                            {% else %}
+
+                                <li><a href="{% url 'qa:singup' %}">Sing up</a></li>
+                                <li><a href="{% url 'qa:login' %}">Login</a></li>
+
+                            {% endif %}
+                        </ul>
+
+
+                        {#                                                      #}
+                        {#                        Search                        #}
+                        {#                                                      #}
+
+
+                        {#                        <form class="navbar-form" role="search" method="get">#}
+                        {#                            <div class="col-lg-6">#}
+                        {#                                <div class="input-group" style="width: 100%">#}
+                        {#                                    <input type="text" class="form-control" placeholder="Search for...">#}
+                        {#                                    <span class="input-group-btn">#}
+                        {#                                    <button class="btn btn-default" type="submit">Go!</button>#}
+                        {#                                  </span>#}
+                        {#                                </div>#}
+                        {#                            </div>#}
+                        {#                        </form>#}
+
+
+                    </div>
+                </div>
+            </div>
+            <hr style="margin-top: 0px; margin-bottom: 0px">
+        </nav>
     {% endblock %}
 </header>
 
-{% block page %}
 
-	{% block content %}
-	{% endblock %}
+{% block container %}
 
-    {% block pagination %}
-    {% endblock %}
+    <div class="container" style="margin-top: 65px">
+        <div class="row">
+            <div class="col-md-11">
+
+                <div class="col-md-8">
+                    <div class="title" style="margin-bottom: 10px">
+                        <div style="height: 35px">
+
+                            {% block title %}
+
+                            {% endblock %}
+
+                            <div style="float: right; display: inline-block;">
+                                <h4 style="margin-top: 0px;margin-bottom: 0px;">
+                                    <a class="btn btn-default btn-sm" role="button" href="{% url 'qa:ask-question' %}">Ask
+                                        Question </a>
+                                </h4>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+                <div class="col-md-8">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+
+                <div class="col-md-3">
+                    <div style="height: 35px">
+                        <div style="margin-top: 7px">
+                            <h4 style="text-align: center; margin-top: 0px;margin-bottom: 0px;">Popular tags</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    {% block sidebar %}
+
+                        <div id="tagcloud">
+                            <a href="#" rel="0">perl</a>
+                            <a href="#" rel="13">python</a>
+                            <a href="#" rel="17">django</a>
+                            <a href="#" rel="4">mysql</a>
+                            <a href="#" rel="5">bender</a>
+                            <a href="#" rel="19">kill_all_humans</a>
+                            <a href="#" rel="15">firefox</a>
+                            <a href="#" rel="7">html</a>
+                            <a href="#" rel="11">bootstrap</a>
+                            <a href="#" rel="3">ajax</a>
+                        </div>
+
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+
+        {% block pagination %}
+        {% endblock %}
+
+    </div>
 
 {% endblock %}
+
 <footer>
     {% block footer %}
-    	{% block copyright %}
-    	{% endblock %}
+
     {% endblock %}
 </footer>
+
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="/js/jquery.tagcloud.js"></script>
+<script>
+    $("#tagcloud a").tagcloud({
+        size: {start: 12, end: 36, unit: "px"},
+        color: {start: '#3498DB', end: '#46CFB0'}
+    });
+</script>
+{% block script %}
+
+{% endblock %}
+
 </body>
 </html>
