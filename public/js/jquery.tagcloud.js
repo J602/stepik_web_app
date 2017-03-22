@@ -16,28 +16,28 @@
   };
 
   // Converts hex to an RGB array
-  var toRGB = function(code) {
-    if (code.length === 4) {
-      code = code.replace(/(\w)(\w)(\w)/gi, "\$1\$1\$2\$2\$3\$3");
-    }
-    var hex = /(\w{2})(\w{2})(\w{2})/.exec(code);
-    return [parseInt(hex[1], 16), parseInt(hex[2], 16), parseInt(hex[3], 16)];
-  };
-
-  // Converts an RGB array to hex
-  var toHex = function(ary) {
-    return "#" + jQuery.map(ary, function(i) {
-      var hex =  i.toString(16);
-      hex = (hex.length === 1) ? "0" + hex : hex;
-      return hex;
-    }).join("");
-  };
-
-  var colorIncrement = function(color, range) {
-    return jQuery.map(toRGB(color.end), function(n, i) {
-      return (n - toRGB(color.start)[i])/range;
-    });
-  };
+  // var toRGB = function(code) {
+  //   if (code.length === 4) {
+  //     code = code.replace(/(\w)(\w)(\w)/gi, "\$1\$1\$2\$2\$3\$3");
+  //   }
+  //   var hex = /(\w{2})(\w{2})(\w{2})/.exec(code);
+  //   return [parseInt(hex[1], 16), parseInt(hex[2], 16), parseInt(hex[3], 16)];
+  // };
+  //
+  // // Converts an RGB array to hex
+  // var toHex = function(ary) {
+  //   return "#" + jQuery.map(ary, function(i) {
+  //     var hex =  i.toString(16);
+  //     hex = (hex.length === 1) ? "0" + hex : hex;
+  //     return hex;
+  //   }).join("");
+  // };
+  //
+  // var colorIncrement = function(color, range) {
+  //   return jQuery.map(toRGB(color.end), function(n, i) {
+  //     return (n - toRGB(color.start)[i])/range;
+  //   });
+  // };
 
   // var tagColor = function(color, increment, weighting) {
   //   var rgb = jQuery.map(toRGB(color.start), function(n, i) {
@@ -71,9 +71,9 @@
       fontIncr = (opts.size.end - opts.size.start)/range;
     }
     // Colors
-    if (opts.color) {
-      colorIncr = colorIncrement (opts.color, range);
-    }
+    // if (opts.color) {
+    //   colorIncr = colorIncrement (opts.color, range);
+    // }
     return this.each(function() {
       var weighting = $(this).attr("rel") - lowest;
       if (opts.size) {

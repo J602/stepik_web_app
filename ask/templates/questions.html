@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 
 {% block title %}
-    <div style="display: inline-block"><h4>{{ title }}</h4></div>
-    <div style="display: inline-block"><h4><a href="/popular"> Hot Question</a></h4></div>
+    <div class="block-inline"><h3 class="current-content-title">{{ title }}</h3></div>
+    {% for item in other_link %}
+        <div class="block-inline"><h4 class="content-title"><a href={{ item.url }}> {{ item.title }}</a></h4></div>
+    {% endfor %}
 
 {% endblock %}
 
@@ -11,9 +13,9 @@
 {% block content %}
 
     {% for question in questions %}
-        <div class="media" style="position:relative;">
+        <div class="media question">
             <div class="media-left">
-                <img class="media-object" style="width: 72px; height: 72px;"
+                <img class="media-object user-avatar"
                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9cGgmE6g-rlUiNz9sLGl8YTt0m1yZfjTbuMWg6QQAhpm6trbF"
                      alt="...">
                 <p class="text-center">{{ question.author }}</p>
@@ -23,30 +25,35 @@
                 <h4 class="media-heading"><a
                         href={% url 'qa:question-detail' question.id %}> {{ question.title }} </a>
                 </h4>
-                <p style="padding-bottom: 15px; text-align: justify">{{ question.text | truncatewords:50 }}</p>
+                <p class="question-shot-text">{{ question.text | truncatewords:50 }}</p>
 
-                <div style="position: absolute; bottom: -12px;">
+                <div class="question-footer">
                     <ul class="list-inline">
-                        <li><a href={% url 'qa:question-detail' question.id %}> Ansvers(4)</a></li>
-                        <li>Tags:</li>
-                        <li><a href="#">python</a></li>
-                        <li><a href="#">django</a></li>
+                        <li><a href={% url 'qa:question-detail' question.id %}>Answers({{ question.answers.count }})</a>
+                        </li>
+                        {% if question.tags.all.count > 0 %}
+                            <li>Tags:</li>
+                        {% endif %}
+                        {% for tag in question.tags.all %}
+                            <li><a href="{% url 'qa:questions-by-tag' tag.id %}">{{ tag }}</a></li>
+                        {% endfor %}
                     </ul>
                 </div>
             </div>
 
-            <div class="media-right"
-                 style="vertical-align:middle; width: 30px; padding-left: 30px;padding-bottom: 15px;">
-                <a class="glyphicon glyphicon-triangle-top" style="width: 10px" href="#"></a>
-                <div style=" text-align: center">
-                    <span>{{ question.rating }}</span>
+            <div class="media-right q-vote">
+                <span id="q-like-{{ question.id }}" class="glyphicon glyphicon-triangle-top q-like {% if user in question.likes.all %} i-like {% endif %}"
+                   href="{% url 'qa:ajax-question-like' question.id %}"></span>
+                <div class="vote-rating">
+                    <span id="q-rating-{{ question.id }}">{{ question.rating }}</span>
                 </div>
-                <a class="glyphicon glyphicon-triangle-bottom" href="#"></a>
+                <span class="glyphicon glyphicon-triangle-bottom q-dislike"
+                   href="{% url 'qa:ajax-question-dislike' question.id %}"  title='test'></span>
             </div>
 
         </div>
 
-        <hr style="margin-top: 5px">
+        <hr class="question-hr">
     {% endfor %}
 
 
@@ -57,33 +64,38 @@
 
 {% block pagination %}
 
-    <div class="row">
-        <div class="col-md-11">
-            <nav aria-label="navigation">
-                <ul class="pager">
-                    {% if questions.has_previous %}
-                        <li>
-                            <a href="?page={{ questions.previous_page_number }}">Previous</a>
-                        </li>
-                    {% endif %}
+    <div id="pagination">
+        <div class="row">
+            <div class="col-md-7 col-sm-9">
+                <nav aria-label="navigation">
+                    <ul class="pager">
+                        {% if questions.has_previous %}
+                            <li>
+                                <a href="?page={{ questions.previous_page_number }}">Previous</a>
+                            </li>
+                        {% endif %}
 
-                    <span class="current">
+                        <span class="current">
                                         page {{ questions.number }} of {{ questions.paginator.num_pages }}.
                                     </span>
 
-                    {% if questions.has_next %}
-                        <li>
-                            <a href="?page={{ questions.next_page_number }}">Next</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </nav>
+                        {% if questions.has_next %}
+                            <li>
+                                <a href="?page={{ questions.next_page_number }}">Next</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
         </div>
     </div>
+
 {% endblock %}
 
 
 {% block script %}
+    <script>
+    </script>
 
 {% endblock %}
 

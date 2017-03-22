@@ -1,13 +1,30 @@
 {% extends "base.html" %}
 
 {% block title %}
-    {{title}}
+    <div class="block-inline"><h3 class="current-content-title">{{ title }}</h3></div>
 {% endblock %}
 
 {% block content %}
-    <form action="{% url 'qa:singup' %}" method="post">
+    <form class="form-horizontal" action="{% url 'qa:singup' %}" method="post">
         {% csrf_token %}
-        {{form.as_ul}}
-        <input type="submit" value="Submit">
+        {{ form.non_field_errors }}
+
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.errors }}
+                <label class="col-md-2 control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                <div class="col-md-4">
+                    {{ field }}
+                </div>
+            </div>
+        {% endfor %}
+
+        <div class="form-group">
+            <div class="col-md-2"></div>
+            <div class="col-md-4">
+                <input class="btn btn-success" type="submit" value="Create">
+            </div>
+        </div>
+
     </form>
 {% endblock %}

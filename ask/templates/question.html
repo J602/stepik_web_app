@@ -1,71 +1,98 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div style="min-height: 173px; position: relative">
-        <div style="padding-bottom: 15px">
+    <div class="detail-q-wrapper">
+        <div class="detail-q-content">
 
-            <div class="right" style="float: right; width: 110px; height: 90px; align-content: center">
-                <p class="text-center"style="margin-bottom: 0px"><img style="width: 72px; height: 72px;"
-                                            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9cGgmE6g-rlUiNz9sLGl8YTt0m1yZfjTbuMWg6QQAhpm6trbF"
-                                            alt="..."></p>
-                <p class="text-center" style="margin-bottom: 0px">{{ question.author }}</p>
+            <div class="right detail-q-user">
+                <p class="text-center"><img class="user-avatar"
+                                                                       src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9cGgmE6g-rlUiNz9sLGl8YTt0m1yZfjTbuMWg6QQAhpm6trbF"
+                                                                       alt="..."></p>
+                <p class="text-center">{{ question.author }}</p>
             </div>
 
-            <h3 style="margin-top: 0px;"><a href="" style="color:#2B2B2B ;"> {{ question.title }}</a></h3>
+            <h3 class="detail-q-header"><a href="#"> {{ question.title }}</a></h3>
 
-            <p style="text-align: justify">{{ question.text }}</p>
+            <p>{{ question.text }}</p>
         </div>
-        <div style="position: absolute; bottom: -12px;">
+        <div class="question-footer">
 
             <ul class="list-inline">
-                <li style=" text-align: center; margin-bottom: -7px">
-                    <a class="glyphicon glyphicon-triangle-top" style="width: 10px; margin-right: 4px" href="#"></a>
+                <li class="vote-like-wrapper">
+                    <span id="q-like-{{  question.id }}" class="glyphicon glyphicon-triangle-top q-like detail-d-like {% if user in question.likes.all %} i-like {% endif %}"
+                       href="{% url 'qa:ajax-question-like' question.id %}"></span>
                 </li>
-                <li style=" text-align: center; margin-bottom: -5px">
-                    <span>{{ question.rating }}</span>
+                <li class="vote-rating-wrapper">
+                    <span id="q-rating-{{ question.id }}">{{ question.rating }}</span>
                 </li>
-                <li style=" text-align: center; margin-bottom: -7px">
-                    <a class="glyphicon glyphicon-triangle-bottom" href="#"></a>
+                <li class="vote-like-wrapper">
+                    <span class="glyphicon glyphicon-triangle-bottom q-dislike"
+                       href="{% url 'qa:ajax-question-dislike' question.id %}"></span>
                 </li>
                 <li>Tags:</li>
-                <li><a href="#">python</a></li>
-                <li><a href="#">django</a></li>
+                {% for tag in question.tags.all %}
+                    <li><a href="{% url 'qa:questions-by-tag' tag.id %}">{{ tag }}</a></li>
+                {% endfor %}
             </ul>
         </div>
     </div>
-    <hr style="margin-bottom: 10px; margin-top: 10px">
+    <hr class="detail-q-hr">
 
     {% for answer in answers %}
-        <div class="media" style="position:relative;">
+        <div class="media answer-wrapper">
             <div class="media-left">
-                <img class="media-object" style="width: 72px; height: 72px; "
+                <img class="media-object user-avatar"
                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9cGgmE6g-rlUiNz9sLGl8YTt0m1yZfjTbuMWg6QQAhpm6trbF"
                      alt="...">
-                <p class="text-center" style="margin-bottom: 0px;">{{ answer.author }}</p>
+                <p class="text-center">{{ answer.author }}</p>
 
-                <div style=" text-align: center; margin-bottom: -7px">
-                    <a class="glyphicon glyphicon-triangle-top" style="width: 10px; margin-right: 4px" href="#"></a>
+                <div class="vote-like-wrapper">
+                    <span id="a-like-{{ answer.id }}" class="glyphicon glyphicon-triangle-top a-like {% if user in answer.likes.all %} i-like {% endif %}"
+                       href="{% url 'qa:ajax-answer-like' answer.id %}"></span>
                 </div>
-                <div style=" text-align: center; margin-bottom: -5px">
-                    <span>{{ question.rating }}</span>
+                <div class="vote-rating-wrapper">
+                    <span id="a-rating-{{ answer.id }}">{{ answer.rating }}</span>
                 </div>
-                <div style=" text-align: center; margin-bottom: -7px">
-                    <a class="glyphicon glyphicon-triangle-bottom" href="#"></a>
+                <div class="vote-like-wrapper">
+                    <span class="glyphicon glyphicon-triangle-bottom a-dislike" href="{% url 'qa:ajax-answer-dislike' answer.id %}"></span>
                 </div>
 
             </div>
 
             <div class="media-body">
-                <p style="padding-bottom: 15px; text-align: justify">{{ answer.text }}</p>
+                <p class="answer-text">{{ answer.text }}</p>
             </div>
         </div>
-        <hr style="margin-bottom: 10px; margin-top: 8px">
+        <hr class="detail-q-hr">
     {% endfor %}
 
-    <form action={% url 'qa:question-detail' question.id %} method="post">
-        {% csrf_token %}
-        {{ form.as_ul }}
-        <input type="submit" value="Submit">
-    </form>
+    {% if user.is_authenticated %}
+
+        <form class="form-horizontal" action={% url 'qa:question-detail' question.id %} method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            {% for field in form %}
+                <div class="form-group">
+                    {{ field.errors }}
+                    <label class="col-md-1 control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <div class="col-md-11">
+                        {{ field }}
+                    </div>
+                </div>
+            {% endfor %}
+
+            <div class="form-group">
+                <div class="col-md-1"></div>
+                <div class="col-md-11">
+                    <input class="btn btn-success" type="submit" value="Answer">
+                </div>
+            </div>
+
+        </form>
+    {% else %}
+        You must be authorized user for send answer.
+        <a class="btn btn-success" role="button" href="{% url 'qa:login' %}">Login</a>
+    {% endif %}
 
 {% endblock %}

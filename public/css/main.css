@@ -1,0 +1,317 @@
+
+html, body {
+    height: 100%;
+    min-width: 770px;
+    position: relative;
+    overflow-x: hidden;
+}
+
+body {
+    overflow: hidden;
+    height: auto;
+    min-height: 100%;
+    font-family: Raleway;
+}
+
+header nav {
+    background-color: white;
+    opacity: 0.9;
+
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+#user-avatar {
+    width: 32px;
+    height: 32px;
+    margin-top: 9px
+}
+
+.user-avatar {
+    width: 72px;
+    height: 72px;
+}
+
+.text-larger {
+    font-size: larger;
+}
+.text-center {
+    margin-bottom: 0px;
+}
+
+.block-inline {
+    display: inline-block;
+}
+
+.nav-user {
+    display: inline-flex
+}
+
+.nav-hr {
+
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.main-content-container{
+    height: auto;
+    margin-top: 65px;
+}
+
+.content-title-wrapper{
+    margin-bottom: 10px;
+    height: 35px
+}
+
+
+.current-content-title{
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-right: 25px;
+}
+
+
+.content-title{
+    padding-right: 7px;
+}
+
+
+.tag-title-wrapper{
+    width: 100%;
+    height: 35px;
+    margin-top: 10px;
+    margin-bottom: -10px;
+    text-align: center;
+}
+
+.ask-btm{
+    float: right;
+    display: inline-block;
+    padding-top: 3px;
+}
+
+.ask-btm-header {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.questions{
+    margin-bottom: 85px;
+    padding-bottom: 15px;
+}
+
+.question{
+    position:relative;
+}
+
+.question-shot-text {
+    padding-bottom: 15px;
+}
+
+.question-footer {
+    position: absolute;
+    bottom: -12px;
+}
+
+.question-hr {
+    margin-top: 5px
+}
+
+.q-vote {
+    vertical-align: middle;
+    width: 30px;
+    padding-left: 30px;
+    padding-bottom: 15px;
+}
+
+.q-like, .q-dislike {
+    color: #337ab7;
+    cursor: pointer;
+}
+
+.vote-rating {
+    text-align: center;
+}
+
+.detail-q-wrapper {
+    min-height: 90px;
+    position: relative;
+}
+
+.detail-q-content {
+    padding-bottom: 15px;
+}
+
+.detail-q-user {
+    float: right;
+    width: 110px;
+    height: 90px;
+    align-content: center;
+}
+
+.detail-q-header {
+    margin-top: 0px;
+}
+.detail-q-header a {
+    color: #2B2B2B;
+}
+
+.vote-like-wrapper {
+    text-align: center;
+    margin-bottom: -7px;
+}
+
+.vote-rating-wrapper {
+    text-align: center;
+    margin-bottom: -5px;
+    min-width: 19px;
+}
+
+.detail-d-like {
+    width: 10px;
+    margin-right: 4px;
+}
+
+.detail-q-hr {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.answer-wrapper {
+    position:relative;
+}
+
+.a-like {
+    color: #337ab7;
+    cursor: pointer;
+    width: 10px;
+    margin-right: 4px
+}
+
+.a-dislike {
+    color: #337ab7;
+    cursor: pointer;
+}
+
+.i-like {
+    color: #3DB70C;
+}
+
+.answer-text {
+    padding-bottom: 15px;
+}
+
+#pagination {
+    width: 100%;
+    position: absolute;
+    bottom: 35px;
+    text-align: right;
+    padding-bottom: 6px;
+}
+
+
+footer {
+    height: 35px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    text-align: right;
+    background-color: #1EAEDB;
+
+}
+
+footer p {
+    margin-top: 7px;
+}
+
+/* latin-ext */
+@font-face {
+    font-family: 'Raleway';
+    font-style: normal;
+    font-weight: 300;
+    src: local('Raleway Light'), local('Raleway-Light'), url(https://fonts.gstatic.com/s/raleway/v11/ZKwULyCG95tk6mOqHQfRBCEAvth_LlrfE80CYdSH47w.woff2) format('woff2');
+    unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* latin */
+@font-face {
+    font-family: 'Raleway';
+    font-style: normal;
+    font-weight: 300;
+    src: local('Raleway Light'), local('Raleway-Light'), url(https://fonts.gstatic.com/s/raleway/v11/-_Ctzj9b56b8RgXW8FArifk_vArhqVIZ0nv9q090hN8.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
+/* latin-ext */
+@font-face {
+    font-family: 'Raleway';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Raleway'), local('Raleway-Regular'), url(https://fonts.gstatic.com/s/raleway/v11/yQiAaD56cjx1AooMTSghGfY6323mHUZFJMgTvxaG2iE.woff2) format('woff2');
+    unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* latin */
+@font-face {
+    font-family: 'Raleway';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Raleway'), local('Raleway-Regular'), url(https://fonts.gstatic.com/s/raleway/v11/0dTEPzkLWceF7z0koJaX1A.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
+/* latin-ext */
+@font-face {
+    font-family: 'Raleway';
+    font-style: normal;
+    font-weight: 500;
+    src: local('Raleway Medium'), local('Raleway-Medium'), url(https://fonts.gstatic.com/s/raleway/v11/Li18TEFObx_yGdzKDoI_ciEAvth_LlrfE80CYdSH47w.woff2) format('woff2');
+    unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* latin */
+@font-face {
+    font-family: 'Raleway';
+    font-style: normal;
+    font-weight: 500;
+    src: local('Raleway Medium'), local('Raleway-Medium'), url(https://fonts.gstatic.com/s/raleway/v11/CcKI4k9un7TZVWzRVT-T8_k_vArhqVIZ0nv9q090hN8.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
+/* latin-ext */
+@font-face {
+    font-family: 'Raleway';
+    font-style: normal;
+    font-weight: 600;
+    src: local('Raleway SemiBold'), local('Raleway-SemiBold'), url(https://fonts.gstatic.com/s/raleway/v11/STBOO2waD2LpX45SXYjQBSEAvth_LlrfE80CYdSH47w.woff2) format('woff2');
+    unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* latin */
+@font-face {
+    font-family: 'Raleway';
+    font-style: normal;
+    font-weight: 600;
+    src: local('Raleway SemiBold'), local('Raleway-SemiBold'), url(https://fonts.gstatic.com/s/raleway/v11/xkvoNo9fC8O2RDydKj12b_k_vArhqVIZ0nv9q090hN8.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
+/* latin-ext */
+@font-face {
+    font-family: 'Raleway';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Raleway Bold'), local('Raleway-Bold'), url(https://fonts.gstatic.com/s/raleway/v11/WmVKXVcOuffP_qmCpFuyzSEAvth_LlrfE80CYdSH47w.woff2) format('woff2');
+    unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* latin */
+@font-face {
+    font-family: 'Raleway';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Raleway Bold'), local('Raleway-Bold'), url(https://fonts.gstatic.com/s/raleway/v11/JbtMzqLaYbbbCL9X6EvaI_k_vArhqVIZ0nv9q090hN8.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
