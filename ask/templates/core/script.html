@@ -1,0 +1,17 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="/js/jquery.tagcloud.js"></script>
+<script src="/js/main.js"></script>
+<script>
+    $(document).ready(
+        ajaxQuestionLikeDislike(), showGit(), ajaxSendGit(), ajaxSearch()
+    )
+    $(document).ajaxComplete(function () {
+        $("#tagcloud a").tagcloud({
+            size: {start: 14, end: 36, unit: "px"},
+            color: {start: '#3498DB', end: '#46CFB0'}
+
+        })},
+        getTags('{% url 'qa:tags' %}')
+    )
+</script>

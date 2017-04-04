@@ -1,0 +1,3 @@
+{% for tag in tags %}
+    <a href="{% url 'qa:questions-by-tag' tag.id %}" rel="{{ tag.count }}">{{ tag.name }}</a>
+{% endfor %}

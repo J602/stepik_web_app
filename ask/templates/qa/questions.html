@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "core/base.html" %}
 
 {% block title %}
     <div class="block-inline"><h3 class="current-content-title">{{ title }}</h3></div>
@@ -16,14 +16,25 @@
         <div class="media question">
             <div class="media-left">
                 <img class="media-object user-avatar"
-                     src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9cGgmE6g-rlUiNz9sLGl8YTt0m1yZfjTbuMWg6QQAhpm6trbF"
+                     src="
+                    {% if question.author.userprofile.image %}
+                        {{ question.author.userprofile.image.url }}
+                    {% else %}
+                        {{ default_avatar }}
+                    {% endif %}
+                        "
                      alt="...">
-                <p class="text-center">{{ question.author }}</p>
+                <p class="text-center">{{ question.author.userprofile }}</p>
             </div>
 
             <div class="media-body">
                 <h4 class="media-heading"><a
-                        href={% url 'qa:question-detail' question.id %}> {{ question.title }} </a>
+                        href={% url 'qa:question-detail' question.id %}>
+                        {% if not question.published %}
+                            <span class="unpublished">[Unpublished]
+                        {% else %}
+                            <span>
+                        {% endif %} {{ question.title }}  </span> </a>
                 </h4>
                 <p class="question-shot-text">{{ question.text | truncatewords:50 }}</p>
 
@@ -42,13 +53,14 @@
             </div>
 
             <div class="media-right q-vote">
-                <span id="q-like-{{ question.id }}" class="glyphicon glyphicon-triangle-top q-like {% if user in question.likes.all %} i-like {% endif %}"
-                   href="{% url 'qa:ajax-question-like' question.id %}"></span>
+                <span id="q-like-{{ question.id }}"
+                      class="glyphicon q-like {% if user in question.likes.all %} i-like glyphicon-heart {% else %} glyphicon-triangle-top {% endif %}"
+                      href="{% url 'qa:ajax-question-like' question.id %}"></span>
                 <div class="vote-rating">
                     <span id="q-rating-{{ question.id }}">{{ question.rating }}</span>
                 </div>
                 <span class="glyphicon glyphicon-triangle-bottom q-dislike"
-                   href="{% url 'qa:ajax-question-dislike' question.id %}"  title='test'></span>
+                      href="{% url 'qa:ajax-question-dislike' question.id %}" title='test'></span>
             </div>
 
         </div>
@@ -56,11 +68,7 @@
         <hr class="question-hr">
     {% endfor %}
 
-
-
-
 {% endblock %}
-
 
 {% block pagination %}
 

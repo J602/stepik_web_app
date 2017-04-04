@@ -1,17 +1,26 @@
-{% extends "base.html" %}
+{% extends "core/base.html" %}
 
 {% block title %}
     <div class="block-inline"><h3 class="current-content-title">{{ title }}</h3></div>
 {% endblock %}
 
 {% block content %}
-    <form class="form-horizontal" action="{% url 'qa:singup' %}" method="post">
+    <form class="form-horizontal" autocomplete="off" action="{% url 'qa:singup' %}" method="post">
         {% csrf_token %}
-        {{ form.non_field_errors }}
+
+        {% if form.non_field_errors %}
+            {% for error in form.non_field_errors  %}
+                <div class="alert alert-danger" role="alert">{{ error|escape }}</div>
+            {% endfor %}
+        {% endif %}
 
         {% for field in form %}
             <div class="form-group">
-                {{ field.errors }}
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        <div class="alert alert-danger" role="alert">{{ error|escape }}</div>
+                    {% endfor %}
+                {% endif %}
                 <label class="col-md-2 control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
                 <div class="col-md-4">
                     {{ field }}

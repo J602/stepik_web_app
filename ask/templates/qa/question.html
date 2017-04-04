@@ -1,0 +1,113 @@
+{% extends "core/base.html" %}
+{% block title %}
+    {% if user == question.author %}
+        <div class="block-inline">
+            <div style="padding-top: 3px">
+                <a class="btn btn-default btn-sm" role="button" href="{% url 'qa:question-edit' question.id %}">Edit question</a>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <div class="detail-q-wrapper">
+        <div class="detail-q-content">
+
+            <div class="right detail-q-user">
+                <p class="text-center">
+                    <img class="user-avatar"
+                         src="
+                    {% if question.author.userprofile.image %}
+                        {{ question.author.userprofile.image.url }}
+                    {% else %}
+                        {{ default_avatar }}
+                    {% endif %}
+                        "
+                         alt="...">
+                </p>
+                <p class="text-center">{{ question.author.userprofile }}</p>
+            </div>
+
+            <h3 class="detail-q-header">
+                {% if not question.published %}
+                    <a class="unpublished" href="#">[Unpublished] {{ question.title }}</a>
+                {% else %}
+                    <a href="#"> {{ question.title }}</a>
+                {% endif %}
+
+            </h3>
+
+            <p>{{ question.text }}</p>
+        </div>
+        <div class="question-footer">
+
+            <ul class="list-inline">
+                <li class="vote-like-wrapper">
+                    <span id="q-like-{{ question.id }}"
+                          class="glyphicon q-like detail-q-like {% if user in question.likes.all %} i-like glyphicon-heart {% else %} glyphicon-triangle-top  {% endif %}"
+                          href="{% url 'qa:ajax-question-like' question.id %}"></span>
+                </li>
+                <li class="vote-rating-wrapper">
+                    <span id="q-rating-{{ question.id }}">{{ question.rating }}</span>
+                </li>
+                <li class="vote-like-wrapper">
+                    <span class="glyphicon glyphicon-triangle-bottom q-dislike"
+                          href="{% url 'qa:ajax-question-dislike' question.id %}"></span>
+                </li>
+                <li>Tags:</li>
+                {% for tag in question.tags.all %}
+                    <li><a href="{% url 'qa:questions-by-tag' tag.id %}">{{ tag }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <hr class="detail-q-hr">
+
+    <div id="answers"></div>
+
+    {% if user.is_authenticated %}
+
+        <form class="form-horizontal" autocomplete="off" method="post">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">{{ error|escape }}</div>
+                {% endfor %}
+            {% endif %}
+
+            {% for field in form %}
+                <div class="form-group">
+                    {{ field.errors }}
+                    <label class="col-md-1 control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <div class="col-md-11">
+                        {{ field }}
+                    </div>
+                </div>
+            {% endfor %}
+
+            <div class="form-group">
+                <div class="col-md-1"></div>
+                <div class="col-md-11">
+                    <input id="add-answer" class="btn btn-success" type="submit" value="Answer"
+                           href="{% url 'qa:ajax-add-answer' question.id %}">
+                </div>
+            </div>
+
+        </form>
+    {% else %}
+        You must be authorized user for send answer.
+        <a class="btn btn-success" role="button" href="{% url 'qa:login' %}">Login</a>
+    {% endif %}
+
+{% endblock %}
+
+
+{% block script %}
+    <script>
+        function getAnswers() {
+            $('#answers').load('{% url 'qa:answers' question.id %}');
+            setTimeout(getAnswers, 5000);
+        }
+        $(document).ready(getAnswers(), ajaxAddAnswer());
+    </script>
+{% endblock %}

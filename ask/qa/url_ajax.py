@@ -13,4 +13,8 @@ urlpatterns = [
     url(r'ajax/answer/like/(?P<id>\d+)/$', views.ajax_answer_like, name='ajax-answer-like'),
     url(r'ajax/answer/dislike/(?P<id>\d+)/$', views.ajax_answer_dislike, name='ajax-answer-dislike'),
 
+    url(r'ajax/answer/correct/(?P<id>\d+)/$', views.ajax_answer_correct, name='ajax-answer-correct'),
+    url(r'ajax/answer/add/(?P<id>\d+)/$', views.ajax_add_answer, name='ajax-add-answer'),
+
+    url(r'github/$', views.ajax_test, name='my-github'),
     ]

@@ -6,4 +6,5 @@ ask/__pycache__/*
 local_settings.py
 *.pyc
 public/admin/*
+public/avatars/*
 

@@ -1,0 +1,83 @@
+{% extends "core/base.html" %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+
+    <form class="form-horizontal" autocomplete="off" action={% url 'qa:user-settings' %} method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% if user_form.non_field_errors %}
+            {% for error in user_form.non_field_errors %}
+                <div class="alert alert-danger" role="alert">{{ error|escape }}</div>
+            {% endfor %}
+        {% endif %}
+
+        {% for field in user_form %}
+
+            <div class="form-group">
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        <div class="alert alert-danger" role="alert">{{ error|escape }}</div>
+                    {% endfor %}
+                {% endif %}
+
+                <label class="col-md-2 control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                <div class="col-md-6">
+                    {{ field }}
+                </div>
+            </div>
+
+        {% endfor %}
+
+        {% if user_profile_form.non_field_errors %}
+            {% for error in user_form.non_field_errors %}
+                <div class="alert alert-danger" role="alert">{{ error|escape }}</div>
+            {% endfor %}
+        {% endif %}
+
+        {% for field in user_profile_form %}
+
+            {% if field.id_for_label == 'id_image' %}
+                <div class="form-group">
+                <label class="col-md-2 control-label">Current avatar </label>
+                <div class="col-md-6">
+                <img class="img-rounded" src="
+                    {% if user.userprofile.image %}
+                        {{ user.userprofile.image.url }}
+                    {% else %}
+                        {{ default_avatar }}
+                    {% endif %}
+                        " alt="..." style="height: 140px; width: 140px">
+                </div>
+                </div>
+            {% endif %}
+
+            <div class="form-group">
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        <div class="alert alert-danger" role="alert">{{ error|escape }}</div>
+                    {% endfor %}
+                {% endif %}
+
+                <label class="col-md-2 control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                <div class="col-md-6">
+                    {{ field }}
+                </div>
+            </div>
+
+        {% endfor %}
+
+
+
+
+        <div class="form-group">
+            <div class="col-md-1"></div>
+            <div class="col-md-11">
+                <input class="btn btn-success" type="submit" value="SAVE">
+            </div>
+        </div>
+    </form>
+
+{% endblock %}
