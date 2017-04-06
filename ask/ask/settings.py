@@ -25,7 +25,7 @@ SECRET_KEY = '+fny+i15t&d*x_13a&m=%ximgc&tcc-swv52=xflnb$1gcs%5f'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0']
+ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', ]
 
 
 # Application definition
@@ -85,7 +85,7 @@ DATABASES = {
     'default': {
          'ENGINE': 'django.db.backends.mysql',
          'NAME': 'ask',
-         'USER': 'box',
+         'USER': 'django',
          'PASSWORD': 'django12345',
          'HOST': 'localhost',
          'PORT': '3306'
@@ -143,8 +143,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # path to default user avatar
 DEFAULT_USER_AVATAR = '/img/avatar.jpeg'
 
-try:
-    from .local_settings import *
-except ImportError:
-    pass
+# try:
+#     from .local_settings import *
+# except ImportError:
+#     pass
 

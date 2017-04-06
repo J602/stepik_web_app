@@ -1,10 +1,8 @@
 .idea
 init.txt
 logs
-ask/qa/__pycache__/*
-ask/__pycache__/*
 local_settings.py
 *.pyc
-public/admin/*
-public/avatars/*
+public/*
+__pycache__/*
 
