@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '+fny+i15t&d*x_13a&m=%ximgc&tcc-swv52=xflnb$1gcs%5f'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['0.0.0.0', '127.0.0.1', ]
+ALLOWED_HOSTS = ['127.0.0.1', ]
 
 
 # Application definition
@@ -130,15 +130,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
+PROJECT_DIR = os.path.dirname(os.path.dirname(BASE_DIR))
+
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'collected_static')
+STATIC_ROOT = os.path.join(PROJECT_DIR, 'public/static')
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
 
-
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(PROJECT_DIR, 'public/media')
 
 # path to default user avatar
 DEFAULT_USER_AVATAR = '/img/avatar.jpeg'

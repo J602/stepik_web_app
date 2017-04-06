@@ -1,8 +1,10 @@
 .idea
 init.txt
-logs
 local_settings.py
 *.pyc
-public/*
+public/static/*
+public/media/*
 __pycache__/*
+logs/*
+
 

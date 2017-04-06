@@ -6,7 +6,7 @@ from django.contrib.staticfiles.templatetags.staticfiles import static
 def default_avatar(request):
     avatar = cache.get('default_avatar', False)
     if not avatar:
-        avatar = settings.DEFAULT_USER_AVATAR
+        avatar = static(settings.DEFAULT_USER_AVATAR)
     return {
         'default_avatar': avatar
     }
