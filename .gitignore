@@ -6,6 +6,3 @@ public/static/*
 public/media/*
 __pycache__/*
 logs/*
-migrations/*
-
-
