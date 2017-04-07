@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -78,21 +79,19 @@ WSGI_APPLICATION = 'ask.wsgi.application'
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    # }
     'default': {
-         'ENGINE': 'django.db.backends.mysql',
-         'NAME': 'ask',
-         'USER': 'django',
-         'PASSWORD': 'django12345',
-         'HOST': 'localhost',
-         'PORT': '3306'
+         'ENGINE': '',
+         'NAME': '',
+         'USER': '',
+         'PASSWORD': '',
+         'HOST': '',
+         'PORT': ''
     }
 
 }
 
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -144,8 +143,8 @@ MEDIA_ROOT = os.path.join(PROJECT_DIR, 'public/media')
 # path to default user avatar
 DEFAULT_USER_AVATAR = '/img/avatar.jpeg'
 
-# try:
-#     from .local_settings import *
-# except ImportError:
-#     pass
+try:
+    from .local_settings import *
+except ImportError:
+    pass
 
