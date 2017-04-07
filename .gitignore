@@ -5,4 +5,6 @@ local_settings.py
 public/static/*
 public/media/*
 __pycache__/*
+src/ask/qa/migrations/*
 logs/*
+hello.py
