@@ -39,15 +39,13 @@ function ajaxQuestionLikeDislike() {
                 success: function (data) {
                     if (data.status == 'ok') {
                         $('#q-rating-'.concat(data.id)).text(data.rating);
-                        if (data.code == 200) {
-                            var elem = $('#q-like-'.concat(data.id));
-                            if (elem.hasClass('i-like')) {
-                                elem.removeClass('i-like glyphicon-heart');
-                                elem.addClass('glyphicon-triangle-top');
-                            } else {
-                                elem.removeClass('glyphicon-triangle-top');
-                                elem.addClass('i-like glyphicon-heart');
-                            }
+                        var elem = $('#q-like-'.concat(data.id));
+                        if (elem.hasClass('i-like')) {
+                            elem.removeClass('i-like glyphicon-heart');
+                            elem.addClass('glyphicon-triangle-top');
+                        } else {
+                            elem.removeClass('glyphicon-triangle-top');
+                            elem.addClass('i-like glyphicon-heart');
                         }
                     }
                     if (data.status == 'error') {
