@@ -1,4 +1,5 @@
 .idea
+secretkey.txt
 init.txt
 local_settings.py
 *.pyc
