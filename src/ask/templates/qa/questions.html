@@ -71,33 +71,34 @@
 {% endblock %}
 
 {% block pagination %}
+    {% if questions.paginator.num_pages > 1 %}
+        <div id="pagination">
+            <div class="row">
+                <div class="col-md-7 col-sm-9">
+                    <nav aria-label="navigation">
+                        <ul class="pager">
+                            {% if questions.has_previous %}
+                                <li>
+                                    <a href="?page={{ questions.previous_page_number }}">Previous</a>
+                                </li>
+                            {% endif %}
 
-    <div id="pagination">
-        <div class="row">
-            <div class="col-md-7 col-sm-9">
-                <nav aria-label="navigation">
-                    <ul class="pager">
-                        {% if questions.has_previous %}
-                            <li>
-                                <a href="?page={{ questions.previous_page_number }}">Previous</a>
-                            </li>
-                        {% endif %}
+                            <span class="current">
+                                            page {{ questions.number }} of {{ questions.paginator.num_pages }}.
+                                        </span>
 
-                        <span class="current">
-                                        page {{ questions.number }} of {{ questions.paginator.num_pages }}.
-                                    </span>
 
-                        {% if questions.has_next %}
-                            <li>
-                                <a href="?page={{ questions.next_page_number }}">Next</a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </nav>
+                            {% if questions.has_next %}
+                                <li>
+                                    <a href="?page={{ questions.next_page_number }}">Next</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
             </div>
         </div>
-    </div>
-
+    {% endif %}
 {% endblock %}
 
 

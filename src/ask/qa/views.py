@@ -400,3 +400,16 @@ def search(request, *args, **kwargs):
             return AjaxHttpResponse(questions=q)
 
     return render(request, 'qa/search.html', context)
+
+
+##################################################
+#                    ERROR                       #
+##################################################
+
+
+def error404(request, *args, **kwargs):
+    return render(request, 'error/404.html')
+
+
+def error500(request, *args, **kwargs):
+    return render(request, 'error/500.html')

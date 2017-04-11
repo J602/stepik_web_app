@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Out of Memory Error</title>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/main.css">
+</head>
+<body>
+<div id="overlay"></div>
+<div id="git-div"><span id="git-cancel">🞩</span>
+    <form class="git-form" method="post">
+        <p class="help-block text-center">
+            <small>We send github link on your mail.</small>
+        </p>
+        <p class="input-group"><span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span><input
+                id="git-email" class="form-control input-lg" name="email" placeholder="example@example.com" type="text">
+        </p>
+        <p class="text-center">
+            <button id="git-send" type="submit" href="/github/" class="btn btn-success btn-lg">Send me Git</button>
+        </p>
+        <p id="git-msg" class="help-block text-center"></p></form>
+</div>
+<header>
+    <nav class="navbar navbar-fixed-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-11">
+                    <div class="navbar-header  hidden-xs"><a class="navbar-brand" href="/"><span
+                            class="text-larger">{ ? } Out</span>of<span
+                            class="text-larger">MemoryError</span></a>
+                        <ul class="nav navbar-nav hidden-xs hidden-sm">
+                            <li><a class="glyphicon glyphicon-search" href="/search/"></a></li>
+                        </ul>
+                    </div>
+                    <ul class="nav navbar-nav navbar-right nav-user">
+                        <li><a href="/signup/">Sing up</a></li>
+                        <li><a href="/login/">Login</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <hr class="nav-hr">
+    </nav>
+</header>
+<div class="container main-content-container">
+    <div class="row">
+        <div class="col-md-11 questions">
+            <div class="col-md-9">
+                <div class="content-title-wrapper">
+                    <div class="ask-btm"><h4 class="ask-btm-header"><a class="btn btn-default btn-sm" role="button"
+                                                                       href="/ask/">Ask
+                        Question </a></h4></div>
+                </div>
+                <div class="error-template">
+                    <h1>Oops!</h1>
+                    <h2>500 Server Error</h2>
+                    <div class="error-details">
+                        Sorry, an error has occured, server error!<br>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 hidden-xs hidden-sm">
+                <div class="tag-title-wrapper"><h4 class="ask-btm-header">Popular tags</h4></div>
+                <div id="tagcloud"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-11"><p><a id="git-open" href="/github/"> Github </a> © 2017 simple is better</p></div>
+        </div>
+    </div>
+</footer>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="/static/js/jquery.tagcloud.js"></script>
+<script src="/static/js/main.js"></script>
+<script>
+    $(document).ready(
+        ajaxQuestionLikeDislike(), showGit(), ajaxSendGit(), ajaxSearch()
+    )
+    $(document).ajaxComplete(function () {
+            $("#tagcloud a").tagcloud({
+                size: {start: 14, end: 36, unit: "px"},
+                color: {start: '#3498DB', end: '#46CFB0'}
+
+            })
+        },
+        getTags('/tags/')
+    )
+</script>
+</body>
+</html>
