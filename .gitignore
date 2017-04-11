@@ -2,9 +2,12 @@
 init.txt
 local_settings.py
 *.pyc
-public/static/*
-public/media/*
 __pycache__/*
 src/ask/qa/migrations/*
 logs/*
 hello.py
+logs/
+public/
+src/ask/__pycache__/
+src/ask/ask/__pycache__/
+src/ask/qa/__pycache__/
