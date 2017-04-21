@@ -1,0 +1,72 @@
+<div id="answer-{{ answer.id }}">
+    <div class="media answer-wrapper">
+        <div class="media-left">
+
+            <img class="media-object user-avatar"
+                 src="
+                    {% if answer.author.userprofile.image %}
+                        {{ answer.author.userprofile.image.url }}
+                    {% else %}
+                        {{ default_avatar }}
+                    {% endif %}
+                        "
+                 alt="...">
+
+            <p class="text-center">{{ answer.author.userprofile }}</p>
+
+            <div class="vote-like-wrapper">
+
+                    <span id="a-like-{{ answer.id }}"
+                          class="glyphicon a-like {% if user in answer.likes.all %}  i-like glyphicon-heart {% else %} glyphicon-triangle-top  {% endif %}"
+                          href="{% url 'qa:ajax-answer-like' answer.id %}"></span>
+
+            </div>
+
+            <div class="vote-rating-wrapper">
+                <span id="a-rating-{{ answer.id }}">{{ answer.rating }}</span>
+            </div>
+
+            <div class="vote-like-wrapper">
+                    <span class="glyphicon glyphicon-triangle-bottom a-dislike"
+                          href="{% url 'qa:ajax-answer-dislike' answer.id %}"></span>
+            </div>
+
+        </div>
+
+        <div class="media-body {% if not user == question.author and answer.correct %} a-correct-flag  {% endif %} ">
+
+            {% if user == answer.author %}
+                <div class="right answer-nav">
+                    <div class="block-inline">
+                        <button class="btn btn-default btn-sm a-edit" id="{{ answer.id }}" role="button"
+                                data-toggle="modal" data-target="#edit-answer_modal"
+                                url="{% url 'qa:answer' answer.id %}">Edit
+                        </button>
+                    </div>
+                    <div class="block-inline">
+                        <a class="btn btn-danger btn-sm a-delete" role="button"
+                           href="{% url 'qa:ajax-remove-answer' answer.id %}">Delete</a>
+                    </div>
+                </div>
+            {% endif %}
+            {% autoescape off %}
+                <div id="answer-text-{{ answer.id }}" class="answer-text">
+                    {{ answer.text }}
+                </div>
+            {% endautoescape %}
+
+            {% if user == question.author %}
+                <div class="checkbox" style="position: absolute; bottom: -10px; margin-left: 35%;margin-right: 40%">
+                    <label>
+                        <input class="a-correct" id="a-correct-{{ answer.id }}" type="checkbox" {% if answer.correct %}
+                               checked="checked" {% endif %}
+                               href="{% url 'qa:ajax-answer-correct' answer.id %}">
+                        Correct!
+                    </label>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+    <hr class="detail-q-hr">
+</div>

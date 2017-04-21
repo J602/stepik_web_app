@@ -3,7 +3,8 @@
     {% if user == question.author %}
         <div class="block-inline">
             <div style="padding-top: 3px">
-                <a class="btn btn-default btn-sm" role="button" href="{% url 'qa:question-edit' question.id %}">Edit question</a>
+                <a class="btn btn-default btn-sm" role="button" href="{% url 'qa:question-edit' question.id %}">Edit
+                    question</a>
             </div>
         </div>
     {% endif %}
@@ -28,16 +29,17 @@
                 <p class="text-center">{{ question.author.userprofile }}</p>
             </div>
 
-            <h3 class="detail-q-header">
+            <h1 class="detail-q-header">
                 {% if not question.published %}
                     <a class="unpublished" href="#">[Unpublished] {{ question.title }}</a>
                 {% else %}
                     <a href="#"> {{ question.title }}</a>
                 {% endif %}
 
-            </h3>
-
-            <p>{{ question.text }}</p>
+            </h1>
+            {% autoescape off %}
+                <p>{{ question.text }}</p>
+            {% endautoescape %}
         </div>
         <div class="question-footer">
 
@@ -63,7 +65,38 @@
     </div>
     <hr class="detail-q-hr">
 
-    <div id="answers"></div>
+    <!-- Modal -->
+    <div class="modal fade" id="edit-answer_modal" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Edit answer for: {{ question.title }}</h4>
+                </div>
+                <div class="modal-body">
+                    <input id="answer-edit-id" class="hidden">
+                    <textarea id="answer-edit-textarea"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button id="save-answer" class="btn btn-success" data-dismiss="modal"
+                            href="{% url 'qa:ajax-edit-answer' %}">Save
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="answers">
+
+        {% for answer in answers %}
+            {% include "qa/answer.html" with answer=answer question=question %}
+        {% endfor %}
+
+    </div>
 
     {% if user.is_authenticated %}
 
@@ -98,16 +131,12 @@
         You must be authorized user for send answer.
         <a class="btn btn-success" role="button" href="{% url 'qa:login' %}">Login</a>
     {% endif %}
-
 {% endblock %}
 
 
 {% block script %}
+    {% include "qa/script.html" %}
     <script>
-        function getAnswers() {
-            $('#answers').load('{% url 'qa:answers' question.id %}');
-            setTimeout(getAnswers, 5000);
-        }
-        $(document).ready(getAnswers(), ajaxAddAnswer());
+        $(document).ready(addQuestionsAnswersEventHandler);
     </script>
 {% endblock %}

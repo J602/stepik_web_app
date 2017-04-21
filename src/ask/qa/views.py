@@ -23,7 +23,7 @@ class AjaxHttpResponse(HttpResponse):
         kwargs['status'] = status
         super(AjaxHttpResponse, self).__init__(
             content=json.dumps(kwargs),
-            content_type='application/json; charset=utf-8',)
+            content_type='application/json; charset=utf-8', )
 
 
 class ErrorAjaxHttpResponse(AjaxHttpResponse):
@@ -64,7 +64,9 @@ def login_required_ajax(view):
             )
         else:
             redirect('qa:login')
+
     return view2
+
 
 @require_GET
 def question_list(request, *args, **kwargs):
@@ -147,20 +149,24 @@ def user_question(request, *arg, **kwargs):
 def question_detail(request, *args, **kwargs):
     question_id = kwargs.get('id', None)
     question = get_object_or_404(Question, pk=question_id)
+    answers = Answer.objects.filter(question=question).order_by('-rating')
     context = {'question': question,
+               'answers': answers,
                'form': AnswerForm,
                'title': 'Question detail page'}
     return render(request, 'qa/question.html', context)
 
 
+@login_required
 @require_GET
-def answers(request, *args, **kwargs):
-    question_id = kwargs.get('id', None)
-    question = get_object_or_404(Question, pk=question_id)
-    answers = Answer.objects.filter(question=question).order_by('-rating')
-    context = {'answers': answers,
-               'question': question}
-    return render(request, 'qa/answers.html', context)
+def answer(request, *args, **kwargs):
+    answer_id = kwargs.get('id', None)
+    answer = get_object_or_404(Answer, pk=answer_id)
+    json = request.GET.get('json')
+    if json:
+        return AjaxHttpResponse(id=answer.id, text=answer.text)
+    context = {'answer': answer, 'question': answer.question}
+    return render(request, 'qa/answer.html', context)
 
 
 @login_required
@@ -197,7 +203,8 @@ def question_edit(request, *args, **kwargs):
     context = {'form': form,
                'url': reverse('qa:question-edit', kwargs={'id': question_id}),
                'title': 'Edit question:',
-               'button': 'SAVE'}
+               'button': 'SAVE',
+               'question_id': question_id}
     return render(request, 'qa/ask.html', context)
 
 
@@ -271,29 +278,17 @@ def user_settings(request, *args, **kwargs):
     return render(request, 'auth/settings.html', context)
 
 
+def about(request, *args, **kwargs):
+    return render(request, 'core/about.html')
+
+
+def in_dev(request, *args, **kwargs):
+    return render(request, 'core/in_development.html')
+
+
 ##################################################
 #                     AJAX                       #
 ##################################################
-
-
-@require_POST
-@login_required_ajax
-def ajax_add_answer(request, *args, **kwargs):
-    q_id = kwargs.get('id', None)
-    try:
-        question = Question.objects.get(pk=q_id)
-    except Question.DoesNotExist:
-        return ErrorAjaxHttpResponse(code='not_found', message='Question not found.')
-    data = json.loads(request.body.decode('utf-8'))
-    form = AnswerForm(data, initial={'question': q_id})
-    if form.is_valid():
-        answer = form.save(commit=False)
-        answer.question = question
-        answer.author = request.user
-        answer.save()
-        return AjaxHttpResponse(message='Answer added.')
-    return ErrorAjaxHttpResponse(code='invalid', message='Error.')                # it's almost impossible
-
 
 @require_POST
 @login_required_ajax
@@ -329,6 +324,64 @@ def ajax_question_dislike(request, *args, **kwargs):
         return AjaxHttpResponse(id=question.id, rating=question.rating, message='Like removed.')
     else:
         return ErrorAjaxHttpResponse(code='not_exist', message='You don`t like this.')
+
+
+@require_POST
+@login_required_ajax
+def ajax_add_answer(request, *args, **kwargs):
+    q_id = kwargs.get('id', None)
+    try:
+        question = Question.objects.get(pk=q_id)
+    except Question.DoesNotExist:
+        return ErrorAjaxHttpResponse(code='not_found', message='Question not found.')
+    data = json.loads(request.body.decode('utf-8'))
+    form = AnswerForm(data, initial={'question': q_id})
+    if form.is_valid():
+        answer = form.save(commit=False)
+        answer.question = question
+        answer.author = request.user
+        answer.save()
+        return AjaxHttpResponse(message='Answer added.', url=reverse('qa:answer', kwargs={'id': answer.id}))
+    return ErrorAjaxHttpResponse(code='invalid', message='Error.')  # it's almost impossible
+
+
+@require_POST
+@login_required_ajax
+def ajax_remove_answer(request, *args, **kwargs):
+    a_id = kwargs.get('id', None)
+    try:
+        answer = Answer.objects.get(pk=a_id)
+    except Answer.DoesNotExist:
+        return ErrorAjaxHttpResponse(code='not_found', message='Answer not found.')
+
+    if answer.author != request.user:
+        return ErrorAjaxHttpResponse(code='other_owner', message="It's other author answer")
+
+    answer.delete()
+
+    return AjaxHttpResponse(message='Answer removed.', id=a_id)
+
+
+@require_POST
+@login_required_ajax
+def ajax_edit_answer(request, *args, **kwargs):
+
+    data = json.loads(request.body.decode('utf-8'))
+    a_id = data.get('id')
+
+    try:
+        answer = Answer.objects.get(pk=a_id)
+    except Answer.DoesNotExist:
+        return ErrorAjaxHttpResponse(code='not_found', message='Answer not found.')
+    if answer.author != request.user:
+        return ErrorAjaxHttpResponse(code='other_owner', message="It's other author answer")
+
+    form = AnswerForm(data, instance=answer)
+    if form.is_valid():
+        answer.save()
+        return AjaxHttpResponse(message='Answer edited.', id=a_id)
+
+    return ErrorAjaxHttpResponse(code='invalid', message='Error.')
 
 
 @require_POST

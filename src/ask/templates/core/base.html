@@ -5,7 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Out of Memory Error</title>
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/prism/1.6.0/themes/prism.min.css">
     <link rel="stylesheet" type="text/css" href="{% static "css/main.css" %}">
 </head>
 <body>
@@ -46,18 +47,13 @@
                             </a>
                             <ul class="nav navbar-nav hidden-xs hidden-sm">
                                 <li>
-{#                                    <form class="navbar-form" role="search" method="get"#}
-{#                                          action="{% url 'qa:question-list' %}">#}
-{##}
-{#                                        <div class="input-group">#}
-{#                                            <input type="text" class="form-control" placeholder="Search for...">#}
-{#                                            <span class="input-group-btn">#}
-{#                                                            <button class="btn btn-default" type="submit">Go!</button>#}
-{#                                                          </span>#}
-{#                                        </div>#}
-{#                                    </form>#}
                                     <a class="glyphicon glyphicon-search" href="{% url 'qa:search' %}"></a>
-
+                                </li>
+                                <li>
+                                    <a href="{% url 'qa:in-development' %}">Blog</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'qa:about' %}">About</a>
                                 </li>
                             </ul>
                         </div>
@@ -145,7 +141,11 @@
 <footer>
     <div class="container">
         <div class="row">
-            <div class="col-md-11"><p><a id="git-open" href="{% url 'qa:my-github' %}"> Github </a> © 2017 simple is better</p></div>
+            <div class="col-md-11">
+                <p>
+{#                    <a id="git-open" href="{% url 'qa:my-github' %}"> Github </a>#}
+                    © 2017 simple is better</p>
+            </div>
         </div>
     </div>
 </footer>

@@ -1,7 +1,18 @@
 {% extends "core/base.html" %}
 
 {% block title %}
-    <div class="block-inline"><h3 class="current-content-title">{{ title }}</h3></div>
+
+    <div class="block-inline">
+        <h3 class="current-content-title">{{ title }}</h3>
+    </div>
+
+    {% if question_id %}
+        <div class="block-inline">
+            <a class="btn btn-info btn-sm" role="button" href="{% url 'qa:question-detail' question_id %}">
+                <span class="glyphicon glyphicon-arrow-left"></span> Back to question</a>
+        </div>
+    {% endif %}
+
 {% endblock %}
 
 {% block content %}
@@ -37,4 +48,8 @@
             </div>
         </div>
     </form>
+{% endblock %}
+
+{% block script %}
+    {% include "qa/script.html" %}
 {% endblock %}

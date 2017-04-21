@@ -25,7 +25,8 @@ class AskModelForm(forms.ModelForm):
         widgets = {
             'title': widgets.TextInput(attrs={'class': 'form-control'}),
             'text': widgets.Textarea(attrs={'class': 'form-control',
-                                            'row': 11}),
+                                            'rows': 20,
+                                            'id': 'ask-textarea',}),
             'published': widgets.CheckboxInput(attrs={}),
         }
         labels = {
@@ -82,8 +83,8 @@ class AnswerForm(forms.ModelForm):  # AnswerForm - форма добавлени
         fields = ['text', ]
         widgets = {
             'text': widgets.Textarea(attrs={'class': 'form-control',
-                                            'rows': 7,
-                                            'id': 'answer-text',
+                                            'rows': 10,
+                                            'id': 'answer-textarea',
                                             }),
         }
 

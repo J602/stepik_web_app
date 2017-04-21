@@ -14,7 +14,7 @@ urlpatterns = [
     url(r'logout/$', views.user_logout, name='logout'),
 
     url(r'question/(?P<id>\d+)/$', views.question_detail, name='question-detail'),
-    url(r'question/answers/(?P<id>\d+)/$', views.answers, name='answers'),
+    url(r'answer/(?P<id>\d+)/$', views.answer, name='answer'),
     url(r'ask/$', views.ask_question, name='ask-question'),
     url(r'question/edit/(?P<id>\d+)/$', views.question_edit, name='question-edit'),
     url(r'popular/$', views.popular_list, name='popular-question-list'),
@@ -24,5 +24,7 @@ urlpatterns = [
     url(r'tags/$', views.tags, name='tags'),
     url(r'search/$', views.search, name='search'),
 
+    url(r'about/$', views.about, name='about'),
+    url(r'blog/$', views.in_dev, name='in-development')
 
     ] + url_ajax.urlpatterns

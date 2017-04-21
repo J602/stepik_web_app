@@ -28,15 +28,15 @@
             </div>
 
             <div class="media-body">
-                <h4 class="media-heading"><a
+                <h3 class="media-heading"><a
                         href={% url 'qa:question-detail' question.id %}>
-                        {% if not question.published %}
-                            <span class="unpublished">[Unpublished]
-                        {% else %}
-                            <span>
-                        {% endif %} {{ question.title }}  </span> </a>
-                </h4>
-                <p class="question-shot-text">{{ question.text | truncatewords:50 }}</p>
+                    {% if not question.published %}
+                        <span class="unpublished">[Unpublished]
+                    {% else %}
+                        <span>
+                    {% endif %} {{ question.title }}  </span> </a>
+                </h3>
+                <p class="question-shot-text">{{ question.text|truncatewords_html:50|safe|striptags }}</p>
 
                 <div class="question-footer">
                     <ul class="list-inline">
@@ -104,8 +104,10 @@
 
 {% block script %}
     <script>
+        $(document).ready(
+            addQuestionsEventHandler()
+        )
     </script>
-
 {% endblock %}
 
 
