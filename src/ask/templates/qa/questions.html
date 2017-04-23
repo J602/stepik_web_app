@@ -1,6 +1,7 @@
 {% extends "core/base.html" %}
 
 {% block title %}
+
     <div class="block-inline"><h3 class="current-content-title">{{ title }}</h3></div>
     {% for item in other_link %}
         <div class="block-inline"><h4 class="content-title"><a href={{ item.url }}> {{ item.title }}</a></h4></div>
@@ -69,6 +70,7 @@
     {% endfor %}
 
 {% endblock %}
+
 
 {% block pagination %}
     {% if questions.paginator.num_pages > 1 %}

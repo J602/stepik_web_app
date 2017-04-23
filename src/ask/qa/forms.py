@@ -46,7 +46,8 @@ class AskModelForm(forms.ModelForm):
         alphabet = '-' + ''.join([chr(i) for i in range(ord('a'), ord('z') + 1)]) + ''.join(
             [chr(i) for i in range(ord('0'), ord('9') + 1)])
 
-        raw_tags = re.split(', |; | ', self.cleaned_data['tags'].lower())
+        raw_tags = re.split(',|;| ', self.cleaned_data['tags'].lower())
+        raw_tags = [tag for tag in raw_tags if tag]
         if len(raw_tags) > Tag.MAX_TAG_COUNT:
             raise forms.ValidationError('Tags maximum is 5 tag.', code='invalid')
 

@@ -11,6 +11,31 @@ $.ajaxSetup({
     }
 });
 
+
+$.notifyDefaults({
+    icon: 'glyphicon glyphicon-warning-sign',
+    placement: {
+        from: 'top',
+        align: 'left'
+    },
+    newest_on_top: true,
+    delay: 1000,
+    timer: 500
+});
+
+
+function showSuccessMsg(msg) {
+    $.notify({message: msg, icon: 'glyphicon glyphicon-ok-circle'},
+        {type: 'success'}
+    );
+}
+
+function showWarningMsg(msg) {
+    $.notify({message: msg, icon: 'glyphicon glyphicon-remove-circle'},
+        {type: 'danger'}
+    );
+}
+
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie != '') {
@@ -87,9 +112,9 @@ function questionLikeDislikeClickHandler() {
                     elem.removeClass('glyphicon-triangle-top');
                     elem.addClass('i-like glyphicon-heart');
                 }
-            }
-            if (data.status == 'error') {
-                console.log(data);
+                showSuccessMsg(data.message)
+            } else {
+                showWarningMsg(data.message)
             }
         },
         error: function (errMsg) {
@@ -101,11 +126,12 @@ function questionLikeDislikeClickHandler() {
 
 function addAnswersEventHandler() {
     $('#answers').on('click', '.a-like, .a-dislike', answerLikeDislikeClickHandler)
-    .on('change', '.a-correct', answerCorrectChangeHandler)
-    .on('click', '.a-delete', removeAnswerClickHandler)
-    .on('click', '.a-edit', answerEditClickHandler);
-    $("#add-answer").on('click', addAnswerClickHandler);
-    $('#save-answer').on('click', saveAnswerClickHandler);
+        .on('change', '.a-correct', answerCorrectChangeHandler)
+        .on('click', '.a-delete', answerRemoveClickHandler)
+        .on('click', '.a-edit', answerEditClickHandler);
+    $('#add-answer').on('click', answerAddClickHandler);
+    $('#save-answer').on('click', answerSaveClickHandler);
+    $('#close-answer').on('click', answerCloseClickHandler)
 }
 
 function addQuestionsAnswersEventHandler() {
@@ -129,6 +155,9 @@ function answerLikeDislikeClickHandler() {
                     elem.removeClass('glyphicon-triangle-top');
                     elem.addClass('i-like glyphicon-heart');
                 }
+                showSuccessMsg(data.message)
+            } else {
+                showWarningMsg(data.message)
             }
         },
         error: function (errMsg) {
@@ -144,7 +173,9 @@ function answerCorrectChangeHandler() {
         url: addressValue,
         success: function (data) {
             if (data.status == 'ok') {
-                console.log(data);
+                showSuccessMsg(data.message)
+            } else {
+                showWarningMsg(data.message)
             }
         },
         error: function (errMsg) {
@@ -153,7 +184,7 @@ function answerCorrectChangeHandler() {
     });
 }
 
-function addAnswerClickHandler(e) {
+function answerAddClickHandler(e) {
     e.preventDefault();
     var url = $(this).attr('href');
     if (url != undefined) {
@@ -163,7 +194,6 @@ function addAnswerClickHandler(e) {
                 data: JSON.stringify({'text': tinymce.get('answer-textarea').getContent()}),
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
-
                 success: function (data) {
                     if (data.status == 'ok') {
                         $.ajax({
@@ -174,6 +204,9 @@ function addAnswerClickHandler(e) {
                             $('#answers').append(response);
                         });
                         tinymce.get('answer-textarea').setContent('');
+                        showSuccessMsg(data.message)
+                    } else {
+                        showWarningMsg(data.message)
                     }
                 },
                 error: function (errMsg) {
@@ -185,7 +218,7 @@ function addAnswerClickHandler(e) {
 
 }
 
-function removeAnswerClickHandler(e) {
+function answerRemoveClickHandler(e) {
     e.preventDefault();
     var url = $(this).attr('href');
     $.ajax({
@@ -195,6 +228,9 @@ function removeAnswerClickHandler(e) {
             if (data.status == 'ok') {
                 console.log('Deleted!!!');
                 $('#answer-' + data.id).remove();
+                showSuccessMsg(data.message)
+            } else {
+                showWarningMsg(data.message)
             }
         },
         error: function (errMsg) {
@@ -203,7 +239,7 @@ function removeAnswerClickHandler(e) {
     })
 }
 
-function saveAnswerClickHandler(e) {
+function answerSaveClickHandler(e) {
     e.preventDefault();
     var url = $(this).attr('href');
     var id = $('#answer-edit-id').val();
@@ -224,9 +260,14 @@ function saveAnswerClickHandler(e) {
                     $('#answer-text-' + id).html(content);
                     tinymce.get('answer-edit-textarea').setContent('');
                     $('#answer-edit-id').val('');
+                    showSuccessMsg(data.message)
+                } else {
+                    showWarningMsg(data.message)
                 }
             },
             error: function (errMsg) {
+                tinymce.get('answer-edit-textarea').setContent('');
+                $('#answer-edit-id').val('');
                 console.log(errMsg)
             }
         })
@@ -245,11 +286,18 @@ function answerEditClickHandler() {
         success: function (data) {
             if (data.status == 'ok') {
                 tinymce.get('answer-edit-textarea').setContent(data.text)
-
             }
+        },
+        error: function (errMsg) {
+            console.log(errMsg)
         }
     });
 
+}
+
+function answerCloseClickHandler() {
+    tinymce.get('answer-edit-textarea').setContent('');
+    $('#answer-edit-id').val('');
 }
 
 function showGit() {

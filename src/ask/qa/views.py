@@ -112,15 +112,6 @@ def question_by_tag(request, *arg, **kwargs):
     questions = paginate(request, q_list)
     context = {'questions': questions,
                'title': 'By tag: {}'.format(tag.name.upper()),
-               'other_link':
-                   [
-                       # {'title': 'New Question',
-                       #  'url': reverse('qa:new-question-list')},
-                       # {'title': 'Hot Question',
-                       #  'url': reverse('qa:popular-question-list')},
-                       # {'title': 'My Question',
-                       #  'url': reverse('qa:user-question-list')}
-                   ]
                }
 
     return render(request, 'qa/questions.html', context)
@@ -303,7 +294,7 @@ def ajax_question_like(request, *args, **kwargs):
         question.likes.add(request.user)
         question.rating = len(question.likes.all())
         question.save()
-        return AjaxHttpResponse(id=question.id, rating=question.rating, message='New like added.')
+        return AjaxHttpResponse(id=question.id, rating=question.rating, message='New like to question added.')
     else:
         return ErrorAjaxHttpResponse(code='exist', message='Like already exist.')
 
@@ -321,7 +312,7 @@ def ajax_question_dislike(request, *args, **kwargs):
         question.likes.remove(request.user)
         question.rating = len(question.likes.all())
         question.save()
-        return AjaxHttpResponse(id=question.id, rating=question.rating, message='Like removed.')
+        return AjaxHttpResponse(id=question.id, rating=question.rating, message='Like removed from question.')
     else:
         return ErrorAjaxHttpResponse(code='not_exist', message='You don`t like this.')
 
@@ -341,7 +332,7 @@ def ajax_add_answer(request, *args, **kwargs):
         answer.question = question
         answer.author = request.user
         answer.save()
-        return AjaxHttpResponse(message='Answer added.', url=reverse('qa:answer', kwargs={'id': answer.id}))
+        return AjaxHttpResponse(message='New answer was added.', url=reverse('qa:answer', kwargs={'id': answer.id}))
     return ErrorAjaxHttpResponse(code='invalid', message='Error.')  # it's almost impossible
 
 
@@ -359,7 +350,7 @@ def ajax_remove_answer(request, *args, **kwargs):
 
     answer.delete()
 
-    return AjaxHttpResponse(message='Answer removed.', id=a_id)
+    return AjaxHttpResponse(message='Answer deleted.', id=a_id)
 
 
 @require_POST
@@ -379,7 +370,7 @@ def ajax_edit_answer(request, *args, **kwargs):
     form = AnswerForm(data, instance=answer)
     if form.is_valid():
         answer.save()
-        return AjaxHttpResponse(message='Answer edited.', id=a_id)
+        return AjaxHttpResponse(message='Answer was saved.', id=a_id)
 
     return ErrorAjaxHttpResponse(code='invalid', message='Error.')
 
@@ -397,7 +388,7 @@ def ajax_answer_like(request, *args, **kwargs):
         answer.likes.add(request.user)
         answer.rating = len(answer.likes.all())
         answer.save()
-        return AjaxHttpResponse(id=answer.id, rating=answer.rating, message='New like added.')
+        return AjaxHttpResponse(id=answer.id, rating=answer.rating, message='New like to answer added.')
     else:
         return ErrorAjaxHttpResponse(code='exist', message='Like already exist.')
 
@@ -415,7 +406,7 @@ def ajax_answer_dislike(request, *args, **kwargs):
         answer.likes.remove(request.user)
         answer.rating = len(answer.likes.all())
         answer.save()
-        return AjaxHttpResponse(id=answer.id, rating=answer.rating, message='Like removed.')
+        return AjaxHttpResponse(id=answer.id, rating=answer.rating, message='Like removed from answer.')
     else:
         return ErrorAjaxHttpResponse(code='not_exist', message='You don`t like this.')
 
@@ -430,11 +421,11 @@ def ajax_answer_correct(request, *args, **kwargs):
         return ErrorAjaxHttpResponse(code='not_found', message='Answer not found.')
 
     if answer.question.author != request.user:
-        return ErrorAjaxHttpResponse(code='other_owner', message="It's other author question")
+        return ErrorAjaxHttpResponse(code='other_owner', message="It's other author question.")
 
     answer.correct = not answer.correct
     answer.save()
-    msg = 'Correct' if answer.correct else 'Incorrect'
+    msg = 'Answer is marked as "Correct".' if answer.correct else '"Correct" mark deleted.'
     return AjaxHttpResponse(id=answer.id, correct=answer.correct, message=msg)
 
 
