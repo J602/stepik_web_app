@@ -20,7 +20,8 @@ $.notifyDefaults({
     },
     newest_on_top: true,
     delay: 1000,
-    timer: 500
+    timer: 500,
+    z_index: 2000
 });
 
 
@@ -97,7 +98,7 @@ function addQuestionsEventHandler() {
 }
 
 function questionLikeDislikeClickHandler() {
-    var addressValue = $(this).attr('href');
+    var addressValue = $(this).attr('data-action-url');
     $.ajax({
         type: 'post',
         url: addressValue,
@@ -131,7 +132,8 @@ function addAnswersEventHandler() {
         .on('click', '.a-edit', answerEditClickHandler);
     $('#add-answer').on('click', answerAddClickHandler);
     $('#save-answer').on('click', answerSaveClickHandler);
-    $('#close-answer').on('click', answerCloseClickHandler)
+    $('#close-answer').on('click', answerCloseClickHandler);
+    $('#delete-answer-confirm').on('click', answerRemoveConfirmClickHandler)
 }
 
 function addQuestionsAnswersEventHandler() {
@@ -186,7 +188,7 @@ function answerCorrectChangeHandler() {
 
 function answerAddClickHandler(e) {
     e.preventDefault();
-    var url = $(this).attr('href');
+    var url = $(this).attr('data-action-url');
     if (url != undefined) {
         $.ajax({
                 method: 'post',
@@ -219,14 +221,23 @@ function answerAddClickHandler(e) {
 }
 
 function answerRemoveClickHandler(e) {
-    e.preventDefault();
-    var url = $(this).attr('href');
+    $('#answer-remove-id').val($(this).attr('data-id'));    
+}
+
+function answerRemoveConfirmClickHandler() {
+    var url = $(this).attr('data-action-url');
+    var id = $('#answer-remove-id').val();
     $.ajax({
         method: 'post',
         url: url,
+        data: JSON.stringify(
+                {
+                    'id': id
+                }),
+        contentType: 'application/json; charset=utf-8',
+        dataType: 'json',
         success: function (data) {
             if (data.status == 'ok') {
-                console.log('Deleted!!!');
                 $('#answer-' + data.id).remove();
                 showSuccessMsg(data.message)
             } else {
@@ -241,7 +252,7 @@ function answerRemoveClickHandler(e) {
 
 function answerSaveClickHandler(e) {
     e.preventDefault();
-    var url = $(this).attr('href');
+    var url = $(this).attr('data-action-url');
     var id = $('#answer-edit-id').val();
     var content = tinymce.get('answer-edit-textarea').getContent();
     if (url != undefined) {
@@ -275,11 +286,10 @@ function answerSaveClickHandler(e) {
 }
 
 function answerEditClickHandler() {
-    $('#answer-edit-id').val($(this).attr('id'));
-    $('#answer-edit-url').val($(this).attr('href'));
+    $('#answer-edit-id').val($(this).attr('data-id'));
     $.ajax({
         method: 'get',
-        url: $(this).attr('url'),
+        url: $(this).attr('data-action-url'),
         contentType: 'application/json; charset=utf-8',
         dataType: 'json',
         data: {'json': true},
@@ -300,42 +310,36 @@ function answerCloseClickHandler() {
     $('#answer-edit-id').val('');
 }
 
-function showGit() {
-    $('#git-open').click(function (e) {
-        e.preventDefault();
-        $('#overlay, #git-div').css('display', 'block');
-        $('#git-email').val('');
-        $('#git-msg').html('');
-    });
-    $('#git-cancel').click(function () {
-        $('#overlay, #git-div').css('display', 'none');
-    })
-}
-
 function sendGitClickHandler(e) {
     e.preventDefault();
-    var url = $(this).attr('href');
+    var url = $(this).attr('data-action-url');
     var email = $('#git-email').val();
-    if (url != undefined) {
+    if (email != "") {
         $.ajax({
                 method: 'post',
                 url: url,
-                data: JSON.stringify({'text': email}),
+                data: JSON.stringify({'email': email}),
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
                 success: function (data) {
                     if (data.status == 'ok') {
-                        $('#git-msg').html('Message sent on: '.concat(email));
                         setTimeout(function () {
-                            $('#overlay, #git-div').css('display', 'none');
-                        }, 1500)
+                            $('#git-form').modal('toggle');
+                            $('#git-email').val('');
+                        }, 1500);
+                        showSuccessMsg(data.message)
+                    } else {
+                        showWarningMsg(data.message)
                     }
+
                 },
                 error: function (errMsg) {
                     console.log(errMsg);
                 }
             }
         )
+    } else {
+        showWarningMsg('Email is empty.')
     }
 }
 

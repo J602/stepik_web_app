@@ -1,14 +1,15 @@
 {% extends "core/base.html" %}
-
-{% block content %}
-    <div class="error-template">
-        <h1>Ouch!</h1>
-        <h2>This page in development</h2>
-        <div class="error-details">
-            I'm currently working on the development this functionality<br>
+{% spaceless %}
+    {% block content %}
+        <div class="error-template">
+            <h1>Ouch!</h1>
+            <h2>This page in development</h2>
+            <div class="error-details">
+                I'm currently working on the development this functionality<br>
+            </div>
+            <div class="error-actions">
+                <a class="text-larger" href="{% url 'qa:question-list' %}"></i> Take Me Home </a>
+            </div>
         </div>
-        <div class="error-actions">
-            <a class="text-larger" href="{% url 'qa:question-list' %}"></i> Take Me Home </a>
-        </div>
-    </div>
-{% endblock %}
+    {% endblock %}
+{% endspaceless %}

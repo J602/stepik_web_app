@@ -1,18 +1,20 @@
 {% load static from staticfiles %}
-<script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="{% static "js/jquery.tagcloud.js" %}"></script>
-<script src="{% static "js/bootstrap-notify.min.js" %}"></script>
+{% spaceless %}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="{% static "js/jquery.tagcloud.js" %}"></script>
+    <script src="{% static "js/bootstrap-notify.min.js" %}"></script>
 
-<script src="{% static "js/main.js" %}"></script>
-<script>
-    $(document).ajaxComplete(function () {
-            $("#tagcloud a").tagcloud({
-                size: {start: 14, end: 36, unit: "px"},
-                color: {start: '#3498DB', end: '#46CFB0'}
-            })
-        },
-        getTags('{% url 'qa:tags' %}')
-    );
-    $(document).ready(addBaseEventHandler)
-</script>
+    <script src="{% static "js/main.js" %}"></script>
+    <script>
+        $(document).ajaxComplete(function () {
+                $("#tagcloud a").tagcloud({
+                    size: {start: 14, end: 36, unit: "px"},
+                    color: {start: '#3498DB', end: '#46CFB0'}
+                })
+            },
+            getTags('{% url 'qa:tags' %}')
+        );
+        $(document).ready(addBaseEventHandler)
+    </script>
+{% endspaceless %}

@@ -2,12 +2,15 @@
 
 import json
 
+from django import forms
 from django.db import transaction
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, reverse, redirect, Http404
 from django.db.models import Q
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.validators import validate_email
 
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_GET, require_POST
@@ -166,6 +169,7 @@ def ask_question(request, *args, **kwargs):
         form = AskModelForm(request.POST, initial={'author': request.user})
         if form.is_valid():
             question = form.save()
+            messages.add_message(request, messages.SUCCESS, 'New question added.')
             return redirect(reverse('qa:question-detail', kwargs={'id': question.pk}))
     else:
         form = AskModelForm()
@@ -187,6 +191,7 @@ def question_edit(request, *args, **kwargs):
         form = AskModelForm(request.POST, instance=question)
         if form.is_valid():
             form.save()
+            messages.add_message(request, messages.SUCCESS, 'Question saved.')
             return redirect(reverse('qa:question-detail', kwargs={'id': question_id}))
     else:
         form = AskModelForm(instance=question)
@@ -220,7 +225,7 @@ def singup(request, *args, **kwargs):
     else:
         form = NewUserForm()
 
-    context = {'form': form, 'title': 'Registration:'}
+    context = {'forms': [form], 'title': 'Registration:'}
     return render(request, 'auth/singup.html', context)
 
 
@@ -241,7 +246,7 @@ def user_login(request, *args, **kwargs):
     else:
         form = LoginUserForm()
 
-    context = {'form': form, 'title': 'Welcome'}
+    context = {'forms': [form], 'title': 'Welcome'}
     return render(request, 'auth/login.html', context)
 
 
@@ -254,7 +259,7 @@ def user_settings(request, *args, **kwargs):
         if user_form.is_valid() and user_profile_form.is_valid():
             user_form.save()
             user_profile_form.save()
-            # messages.success(request, _('Your profile was successfully updated!'))
+            messages.add_message(request, messages.SUCCESS, 'Your profile was successfully updated!')
             return redirect('qa:user-settings')
         else:
             pass
@@ -263,8 +268,7 @@ def user_settings(request, *args, **kwargs):
         user_form = UserForm(instance=request.user)
         user_profile_form = UserProfileForm(instance=request.user.userprofile)
     context = {
-        'user_form': user_form,
-        'user_profile_form': user_profile_form
+        'forms': [ user_form, user_profile_form ]
     }
     return render(request, 'auth/settings.html', context)
 
@@ -339,7 +343,8 @@ def ajax_add_answer(request, *args, **kwargs):
 @require_POST
 @login_required_ajax
 def ajax_remove_answer(request, *args, **kwargs):
-    a_id = kwargs.get('id', None)
+    data = json.loads(request.body.decode('utf-8'))
+    a_id = data.get('id')
     try:
         answer = Answer.objects.get(pk=a_id)
     except Answer.DoesNotExist:
@@ -445,6 +450,15 @@ def search(request, *args, **kwargs):
 
     return render(request, 'qa/search.html', context)
 
+
+def my_github(request, *args, **kwargs):
+    data = json.loads(request.body.decode('utf-8'))
+    email = data.get('email')
+    try:
+        validate_email(email)
+    except forms.ValidationError:
+        return ErrorAjaxHttpResponse(code='invalid', message='Entered email is invalid.')
+    return AjaxHttpResponse(message='Mail sended on {}'.format(email))
 
 ##################################################
 #                    ERROR                       #

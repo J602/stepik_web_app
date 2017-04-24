@@ -1,145 +1,177 @@
 {% extends "core/base.html" %}
+{% spaceless %}
 
-
-{% block title %}
-    {% if user == question.author %}
-        <div class="block-inline">
-            <div style="padding-top: 3px">
-                <a class="btn btn-default btn-sm" role="button" href="{% url 'qa:question-edit' question.id %}">Edit
-                    question</a>
+    {% block title %}
+        {% if user == question.author %}
+            <div class="block-inline">
+                <div class="q-edit-btn">
+                    <a class="btn btn-default btn-sm" role="button" href="{% url 'qa:question-edit' question.id %}">Edit
+                        question</a>
+                </div>
             </div>
-        </div>
-    {% endif %}
-{% endblock %}
+        {% endif %}
+    {% endblock %}
 
 
-{% block content %}
-    <div class="detail-q-wrapper">
-        <div class="detail-q-content">
+    {% block content %}
+        <div class="detail-q-wrapper">
+            <div class="detail-q-content">
 
-            <div class="right detail-q-user">
-                <p class="text-center">
-                    <img class="user-avatar"
-                         src="
-                    {% if question.author.userprofile.image %}
-                        {{ question.author.userprofile.image.url }}
+                <div class="right detail-q-user">
+                    <p class="text-center">
+                        <img class="user-avatar"
+                             src="{% if question.author.userprofile.image %}
+                            {{ question.author.userprofile.image.url }}
+                        {% else %}
+                            {{ default_avatar }}
+                        {% endif %}" alt="...">
+                    </p>
+                    <p class="text-center">{{ question.author.userprofile }}</p>
+                </div>
+
+                <h1 class="detail-q-header">
+                    {% if not question.published %}
+                        <a class="unpublished" href="#">[Unpublished] {{ question.title }}</a>
                     {% else %}
-                        {{ default_avatar }}
+                        <a href="#"> {{ question.title }}</a>
                     {% endif %}
-                        "
-                         alt="...">
-                </p>
-                <p class="text-center">{{ question.author.userprofile }}</p>
+
+                </h1>
+                <p>{{ question.text | safe }}</p>
             </div>
+            <div class="question-footer">
 
-            <h1 class="detail-q-header">
-                {% if not question.published %}
-                    <a class="unpublished" href="#">[Unpublished] {{ question.title }}</a>
-                {% else %}
-                    <a href="#"> {{ question.title }}</a>
-                {% endif %}
-
-            </h1>
-            {% autoescape off %}
-                <p>{{ question.text }}</p>
-            {% endautoescape %}
-        </div>
-        <div class="question-footer">
-
-            <ul class="list-inline">
-                <li class="vote-like-wrapper">
+                <ul class="list-inline">
+                    <li class="vote-like-wrapper">
                     <span id="q-like-{{ question.id }}"
                           class="glyphicon q-like detail-q-like {% if user in question.likes.all %} i-like glyphicon-heart {% else %} glyphicon-triangle-top  {% endif %}"
-                          href="{% url 'qa:ajax-question-like' question.id %}"></span>
-                </li>
-                <li class="vote-rating-wrapper">
-                    <span id="q-rating-{{ question.id }}">{{ question.rating }}</span>
-                </li>
-                <li class="vote-like-wrapper">
+                          data-action-url="{% url 'qa:ajax-question-like' question.id %}"></span>
+                    </li>
+                    <li class="vote-rating-wrapper">
+                        <span id="q-rating-{{ question.id }}">{{ question.rating }}</span>
+                    </li>
+                    <li class="vote-like-wrapper">
                     <span class="glyphicon glyphicon-triangle-bottom q-dislike"
-                          href="{% url 'qa:ajax-question-dislike' question.id %}"></span>
-                </li>
-                <li>Tags:</li>
-                {% for tag in question.tags.all %}
-                    <li><a href="{% url 'qa:questions-by-tag' tag.id %}">{{ tag }}</a></li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
-    <hr class="detail-q-hr">
-
-    <!-- Modal -->
-    <div class="modal fade" id="edit-answer_modal" role="dialog">
-        <div class="modal-dialog modal-lg">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Edit answer for: {{ question.title }}</h4>
-                </div>
-                <div class="modal-body">
-                    <input id="answer-edit-id" class="hidden">
-                    <textarea id="answer-edit-textarea"></textarea>
-                </div>
-                <div class="modal-footer">
-                    <button id="save-answer" class="btn btn-success" data-dismiss="modal"
-                            href="{% url 'qa:ajax-edit-answer' %}">Save
-                    </button>
-                    <button id="close-answer" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
+                          data-action-url="{% url 'qa:ajax-question-dislike' question.id %}"></span>
+                    </li>
+                    <li>Tags:</li>
+                    {% for tag in question.tags.all %}
+                        <li><a href="{% url 'qa:questions-by-tag' tag.id %}">{{ tag }}</a></li>
+                    {% endfor %}
+                </ul>
             </div>
-
         </div>
-    </div>
+        <hr class="detail-q-hr">
 
-    <div id="answers">
+        <!-- Modal -->
+        <div class="modal fade" id="edit-answer_modal" role="dialog">
+            <div class="modal-dialog modal-lg">
 
-        {% for answer in answers %}
-            {% include "qa/answer.html" with answer=answer question=question %}
-        {% endfor %}
-
-    </div>
-
-    {% if user.is_authenticated %}
-
-        <form class="form-horizontal" autocomplete="off" method="post">
-            {% csrf_token %}
-            {% if form.non_field_errors %}
-                {% for error in form.non_field_errors %}
-                    <div class="alert alert-danger" role="alert">{{ error|escape }}</div>
-                {% endfor %}
-            {% endif %}
-
-            {% for field in form %}
-                <div class="form-group">
-                    {{ field.errors }}
-                    <label class="col-md-1 control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-                    <div class="col-md-11">
-                        {{ field }}
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Edit answer for: {{ question.title }}</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input id="answer-edit-id" class="hidden">
+                        <textarea id="answer-edit-textarea"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="save-answer" class="btn btn-success" data-dismiss="modal"
+                                data-action-url="{% url 'qa:ajax-edit-answer' %}">Save
+                        </button>
+                        <button id="close-answer" type="button" class="btn btn-default" data-dismiss="modal">Close
+                        </button>
                     </div>
                 </div>
+
+            </div>
+        </div>
+
+        <div class="modal fade" id="delete_answer_confirm_modal" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Delete answer:</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input id="answer-remove-id" class="hidden">
+                        Are you sure?
+                    </div>
+                    <div class="modal-footer">
+                        <button id="delete-answer-confirm" class="btn btn-danger" data-dismiss="modal"
+                                data-action-url="{% url 'qa:ajax-remove-answer' %}">Delete
+                        </button>
+                        <button id="close-answer" type="button" class="btn btn-default" data-dismiss="modal">No
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="answers">
+
+            {% for answer in answers %}
+                {% include "qa/answer.html" with answer=answer question=question %}
             {% endfor %}
 
-            <div class="form-group">
-                <div class="col-md-1"></div>
-                <div class="col-md-11">
-                    <input id="add-answer" class="btn btn-success" type="submit" value="Answer"
-                           href="{% url 'qa:ajax-add-answer' question.id %}">
+        </div>
+
+        {% if user.is_authenticated %}
+
+            <form class="form-horizontal" autocomplete="off" method="post">
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                    {% for error in form.non_field_errors %}
+                        <div class="alert alert-danger" role="alert">{{ error|escape }}</div>
+                    {% endfor %}
+                {% endif %}
+
+                {% for field in form %}
+                    <div class="form-group">
+                        {{ field.errors }}
+                        <label class="col-md-1 control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        <div class="col-md-11">
+                            {{ field }}
+                        </div>
+                    </div>
+                {% endfor %}
+
+                <div class="form-group">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-11">
+                        <input id="add-answer" class="btn btn-success" type="submit" value="Answer"
+                               data-action-url="{% url 'qa:ajax-add-answer' question.id %}">
+                    </div>
                 </div>
-            </div>
 
-        </form>
-    {% else %}
-        You must be authorized user for send answer.
-        <a class="btn btn-success" role="button" href="{% url 'qa:login' %}">Login</a>
-    {% endif %}
-{% endblock %}
+            </form>
+        {% else %}
+            You must be authorized user for send answer.
+            <a class="btn btn-success" role="button" href="{% url 'qa:login' %}">Login</a>
+        {% endif %}
+    {% endblock %}
 
 
-{% block script %}
-    {% include "qa/script.html" %}
-    <script>
-        $(document).ready(addQuestionsAnswersEventHandler);
-    </script>
-{% endblock %}
+    {% block script %}
+        {% include "qa/script.html" %}
+        <script>
+            $(document).ready(addQuestionsAnswersEventHandler
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                        , showSuccessMsg("{{message}}")
+                    {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                        , showWarningMsg("{{message}}")
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            );
+        </script>
+
+    {% endblock %}
+{% endspaceless %}

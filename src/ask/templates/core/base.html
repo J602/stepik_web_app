@@ -1,162 +1,175 @@
 {% load static from staticfiles %}
 {% spaceless %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Out of Memory Error</title>
-    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/prism/1.6.0/themes/prism.min.css">
-    <link rel="stylesheet" type="text/css" href="{% static "css/main.css" %}">
-</head>
-<body>
-<div id="overlay"></div>
-<div id="git-div">
-    <span id="git-cancel">🞩</span>
-    <form class="git-form" method="post">
-        <p class="help-block text-center">
-            <small>We send github link on your mail.</small>
-        </p>
-        <p class="input-group">
-                <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-envelope"></span>
-                </span>
-            <input id="git-email" class="form-control input-lg" name="email" placeholder="example@example.com" type="text">
-        </p>
-        <p class="text-center">
-            <button id="git-send" type="submit" href="{% url 'qa:my-github' %}" class="btn btn-success btn-lg">Send me Git</button>
-        </p>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Out of Memory Error</title>
+        <link rel="stylesheet" type="text/css"
+              href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/prism/1.6.0/themes/prism.min.css">
+        <link rel="stylesheet" type="text/css" href="{% static "css/main.css" %}">
+    </head>
 
-        <p id="git-msg" class="help-block text-center"></p>
-    </form>
-</div>
+    <body>
 
-<header>
+    <div id="git-form" class="modal fade" role="dialog">
+        <div class="modal-dialog">
 
-    {% block head %}
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Github</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center">
+                        <small>We send github link on your mail.</small>
+                    </p>
+                    <p class="input-group">
+                        <span class="input-group-addon"> <span class="glyphicon glyphicon-envelope"></span> </span>
+                        <input id="git-email" class="form-control input-lg" name="email"
+                               placeholder="example@example.com" type="text">
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button id="git-send" type="submit" data-action-url="{% url 'qa:my-github' %}"
+                            class="btn btn-success btn-default">Send me Git
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <nav class="navbar navbar-fixed-top">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-11">
+    <header>
 
-                        <div class="navbar-header  hidden-xs">
-                            <a class="navbar-brand" href="{% url 'qa:question-list' %}"><span
-                                    class="text-larger">{ ? } Out</span>of<span
-                                    class="text-larger">MemoryError</span>
-                            </a>
-                            <ul class="nav navbar-nav hidden-xs hidden-sm">
-                                <li>
-                                    <a class="glyphicon glyphicon-search" href="{% url 'qa:search' %}"></a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'qa:in-development' %}">Blog</a>
-                                </li>
-                                <li>
-                                    <a href="{% url 'qa:about' %}">About</a>
-                                </li>
-                            </ul>
-                        </div>
-
-                        <ul class="nav navbar-nav navbar-right nav-user">
-                            {% if user.is_authenticated %}
-                                <li class="hidden-xs"><img id="user-avatar" class="img-rounded"
-                                                           src="
+        {% block head %}
+            <nav class="navbar navbar-fixed-top">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-11">
+                            <div class="navbar-header">
+                                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                                        data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </button>
+                                <a class="navbar-brand" href="{% url 'qa:question-list' %}"><span
+                                        class="text-larger">{ ? } Out</span>of<span
+                                        class="text-larger">MemoryError</span>
+                                </a>
+                            </div>
+                            <div id="navbar" class="navbar-collapse collapse">
+                                <ul class="nav navbar-nav">
+                                    <li>
+                                        <a class="glyphicon glyphicon-search" href="{% url 'qa:search' %}"></a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'qa:in-development' %}">Blog</a>
+                                    </li>
+                                    <li>
+                                        <a href="{% url 'qa:about' %}">About</a>
+                                    </li>
+                                </ul>
+                                <ul class="nav navbar-nav navbar-right nav-user">
+                                    {% if user.is_authenticated %}
+                                        <li class="hidden-xs"><img id="user-avatar" class="img-rounded"
+                                                                   src="
                                                            {% if user.userprofile.image %}
                                                                     {{ user.userprofile.image.url }}
                                                            {% else %}
                                                                {{ default_avatar }}
                                                            {% endif %}
                                                             " alt="...X...">
-                                </li>
-                                <li><a href="{% url 'qa:user-settings' %}">{{ user.userprofile }}</a></li>
-                                <li><a href="{% url 'qa:logout' %}">Logout</a></li>
-                            {% else %}
-                                <li><a href="{% url 'qa:singup' %}">Sing up</a></li>
-                                <li><a href="{% url 'qa:login' %}">Login</a></li>
+                                        </li>
+                                        <li><a href="{% url 'qa:user-settings' %}">{{ user.userprofile }}</a></li>
+                                        <li><a href="{% url 'qa:logout' %}">Logout</a></li>
+                                    {% else %}
+                                        <li><a href="{% url 'qa:singup' %}">Sing up</a></li>
+                                        <li><a href="{% url 'qa:login' %}"></span> Login</a></li>
 
-                            {% endif %}
-                        </ul>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr class="nav-hr">
+            </nav>
+
+        {% endblock %}
+
+    </header>
+
+    {% block container %}
+
+        <div class="container main-content-container">
+            <div class="row">
+                <div class="col-md-11 questions">
+
+                    <div class="col-md-9">
+                        <div class="content-title-wrapper">
+
+                            {% block title %}
+
+                            {% endblock %}
+
+                            <div class="ask-btm">
+                                <h4 class="ask-btm-header">
+                                    <a class="btn btn-default btn-sm" role="button" href="{% url 'qa:ask-question' %}">Ask
+                                        Question </a>
+                                </h4>
+                            </div>
+
+                        </div>
+
+                        {% block content %}
+                        {% endblock %}
+
+                    </div>
+
+                    <div class="col-md-3 hidden-xs hidden-sm">
+                        <div class="tag-title-wrapper">
+                            <h4 class="ask-btm-header">Popular tags</h4>
+                        </div>
+
+                        {% block sidebar %}
+
+                            <div id="tagcloud">
+                            </div>
+
+                        {% endblock %}
                     </div>
 
                 </div>
             </div>
-            <hr class="nav-hr">
-        </nav>
+
+            {% block pagination %}
+            {% endblock %}
+
+        </div>
 
     {% endblock %}
 
-</header>
-
-{% block container %}
-
-    <div class="container main-content-container">
-        <div class="row">
-            <div class="col-md-11 questions">
-
-                <div class="col-md-9">
-                    <div class="content-title-wrapper">
-
-                        {% block title %}
-
-                        {% endblock %}
-
-                        <div class="ask-btm">
-                            <h4 class="ask-btm-header">
-                                <a class="btn btn-default btn-sm" role="button" href="{% url 'qa:ask-question' %}">Ask
-                                    Question </a>
-                            </h4>
-                        </div>
-
-                    </div>
-
-                    {% block content %}
-                    {% endblock %}
-
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-11">
+                    <p>
+{#                        <a type="button" data-toggle="modal" data-target="#git-form">Github</a>#}
+                        © 2017 simple is better</p>
                 </div>
-
-                <div class="col-md-3 hidden-xs hidden-sm">
-                    <div class="tag-title-wrapper">
-                        <h4 class="ask-btm-header">Popular tags</h4>
-                    </div>
-
-                    {% block sidebar %}
-
-                        <div id="tagcloud">
-                        </div>
-
-                    {% endblock %}
-                </div>
-
             </div>
         </div>
+    </footer>
 
-        {% block pagination %}
-        {% endblock %}
+    {% include "core/script.html" %}
 
-    </div>
+    {% block script %}
+    {% endblock %}
 
-{% endblock %}
-
-<footer>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-11">
-                <p>
-{#                    <a id="git-open" href="{% url 'qa:my-github' %}"> Github </a>#}
-                    © 2017 simple is better</p>
-            </div>
-        </div>
-    </div>
-</footer>
-
-{% include "core/script.html" %}
-
-{% block script %}
-
-{% endblock %}
-
-</body>
-</html>
+    </body>
+    </html>
 
 {% endspaceless %}

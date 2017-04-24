@@ -1,0 +1,51 @@
+<form class="form-horizontal" autocomplete="off" method="post" action="{{ action }}" enctype="{{ encoding }}">
+    {% csrf_token %}
+
+    {% for form in forms %}
+        {% if form.non_field_errors %}
+            {% for error in form.non_field_errors %}
+                <div class="alert alert-danger" role="alert">{{ error|escape }}</div>
+            {% endfor %}
+        {% endif %}
+
+
+        {% for field in form %}
+
+            {% if field.id_for_label == 'id_image' %}
+                <div class="form-group">
+                    <label class="col-md-2 control-label">Current avatar </label>
+                    <div class="col-md-4">
+                        <img class="img-rounded" src="
+                    {% if user.userprofile.image %}
+                        {{ user.userprofile.image.url }}
+                    {% else %}
+                        {{ default_avatar }}
+                    {% endif %}
+                        " alt="..." style="height: 140px; width: 140px">
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="form-group">
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        <div class="alert alert-danger" role="alert">{{ error|escape }}</div>
+                    {% endfor %}
+                {% endif %}
+                <label class="col-md-2 control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                <div class="col-md-5">
+                    {{ field }}
+                </div>
+            </div>
+
+        {% endfor %} {# fields #}
+
+    {% endfor %} {# forms #}
+
+    <div class="form-group">
+        <div class="col-md-2"></div>
+        <div class="col-md-3">
+            <input class="btn btn-success" type="submit" value="{{ submit_value }}">
+        </div>
+    </div>
+</form>

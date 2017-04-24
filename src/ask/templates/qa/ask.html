@@ -1,55 +1,56 @@
 {% extends "core/base.html" %}
+{% spaceless %}
+    {% block title %}
 
-{% block title %}
-
-    <div class="block-inline">
-        <h3 class="current-content-title">{{ title }}</h3>
-    </div>
-
-    {% if question_id %}
         <div class="block-inline">
-            <a class="btn btn-info btn-sm" role="button" href="{% url 'qa:question-detail' question_id %}">
-                <span class="glyphicon glyphicon-arrow-left"></span> Back to question</a>
+            <h3 class="current-content-title">{{ title }}</h3>
         </div>
-    {% endif %}
 
-{% endblock %}
-
-{% block content %}
-    <form class="form-horizontal" autocomplete="off" action={{ url }} method="post">
-        {% csrf_token %}
-        {% if form.non_field_errors %}
-            {% for error in form.non_field_errors  %}
-                <div class="alert alert-danger" role="alert">{{ error|escape }}</div>
-            {% endfor %}
+        {% if question_id %}
+            <div class="block-inline">
+                <a class="btn btn-info btn-sm" role="button" href="{% url 'qa:question-detail' question_id %}">
+                    <span class="glyphicon glyphicon-arrow-left"></span> Back to question</a>
+            </div>
         {% endif %}
 
-        {% for field in form %}
+    {% endblock %}
+
+    {% block content %}
+        <form class="form-horizontal" autocomplete="off" method="post" novalidate>
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">{{ error|escape }}</div>
+                {% endfor %}
+            {% endif %}
+
+            {% for field in form %}
+
+                <div class="form-group">
+                    {% if field.errors %}
+                        {% for error in field.errors %}
+                            <div class="alert alert-danger" role="alert">{{ error|escape }}</div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <label class="col-md-2 control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <div class="col-md-10">
+                        {{ field }}
+                    </div>
+                </div>
+
+            {% endfor %}
 
             <div class="form-group">
-                {% if field.errors %}
-                    {% for error in field.errors %}
-                        <div class="alert alert-danger" role="alert">{{ error|escape }}</div>
-                    {% endfor %}
-                {% endif %}
-
-                <label class="col-md-2 control-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                <div class="col-md-2"></div>
                 <div class="col-md-10">
-                    {{ field}}
+                    <input class="btn btn-success" type="submit" value="{{ button }}">
                 </div>
             </div>
+        </form>
+    {% endblock %}
 
-        {% endfor %}
-
-        <div class="form-group">
-            <div class="col-md-2"></div>
-            <div class="col-md-10">
-                <input class="btn btn-success" type="submit" value="{{ button }}">
-            </div>
-        </div>
-    </form>
-{% endblock %}
-
-{% block script %}
-    {% include "qa/script.html" %}
-{% endblock %}
+    {% block script %}
+        {% include "qa/script.html" %}
+    {% endblock %}
+{% endspaceless %}

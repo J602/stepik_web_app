@@ -1,120 +1,112 @@
 {% extends "core/base.html" %}
 
-{% block title %}
+{% spaceless %}
 
-    <div class="block-inline"><h3 class="current-content-title">{{ title }}</h3></div>
-    {% for item in other_link %}
-        <div class="block-inline"><h4 class="content-title"><a href={{ item.url }}> {{ item.title }}</a></h4></div>
-    {% endfor %}
+    {% block title %}
 
-{% endblock %}
+        <div class="block-inline"><h3 class="current-content-title">{{ title }}</h3></div>
+        {% for item in other_link %}
+            <div class="block-inline"><h4 class="content-title"><a href={{ item.url }}> {{ item.title }}</a></h4></div>
+        {% endfor %}
 
+    {% endblock %}
 
+    {% block content %}
 
-{% block content %}
-
-    {% for question in questions %}
-        <div class="media question">
-            <div class="media-left">
-                <img class="media-object user-avatar"
-                     src="
-                    {% if question.author.userprofile.image %}
-                        {{ question.author.userprofile.image.url }}
-                    {% else %}
-                        {{ default_avatar }}
-                    {% endif %}
-                        "
-                     alt="...">
-                <p class="text-center">{{ question.author.userprofile }}</p>
-            </div>
-
-            <div class="media-body">
-                <h3 class="media-heading"><a
-                        href={% url 'qa:question-detail' question.id %}>
-                    {% if not question.published %}
-                        <span class="unpublished">[Unpublished]
-                    {% else %}
-                        <span>
-                    {% endif %} {{ question.title }}  </span> </a>
-                </h3>
-                <p class="question-shot-text">{{ question.text|truncatewords_html:50|safe|striptags }}</p>
-
-                <div class="question-footer">
-                    <ul class="list-inline">
-                        <li><a href={% url 'qa:question-detail' question.id %}>Answers({{ question.answers.count }})</a>
-                        </li>
-                        {% if question.tags.all.count > 0 %}
-                            <li>Tags:</li>
-                        {% endif %}
-                        {% for tag in question.tags.all %}
-                            <li><a href="{% url 'qa:questions-by-tag' tag.id %}">{{ tag }}</a></li>
-                        {% endfor %}
-                    </ul>
+        {% for question in questions %}
+            <div class="media question">
+                <div class="media-left">
+                    <img class="media-object user-avatar"
+                         src="{% if question.author.userprofile.image %}
+                            {{ question.author.userprofile.image.url }}
+                        {% else %}
+                            {{ default_avatar }}
+                        {% endif %}" alt="...">
+                    <p class="text-center">{{ question.author.userprofile }}</p>
                 </div>
-            </div>
 
-            <div class="media-right q-vote">
+                <div class="media-body">
+                    <h3 class="media-heading"><a
+                            href={% url 'qa:question-detail' question.id %}>
+                        {% if not question.published %}
+                            <span class="unpublished">[Unpublished]
+                        {% else %}
+                            <span>
+                        {% endif %} {{ question.title }}  </span> </a>
+                    </h3>
+                    <p class="question-shot-text">{{ question.text|truncatewords_html:50|safe|striptags }}</p>
+
+                    <div class="question-footer">
+                        <ul class="list-inline">
+                            <li>
+                                <a href={% url 'qa:question-detail' question.id %}>Answers({{ question.answers.count }})</a>
+                            </li>
+                            {% if question.tags.all.count > 0 %}
+                                <li>Tags:</li>
+                            {% endif %}
+                            {% for tag in question.tags.all %}
+                                <li><a href="{% url 'qa:questions-by-tag' tag.id %}">{{ tag }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="media-right q-vote">
                 <span id="q-like-{{ question.id }}"
                       class="glyphicon q-like {% if user in question.likes.all %} i-like glyphicon-heart {% else %} glyphicon-triangle-top {% endif %}"
-                      href="{% url 'qa:ajax-question-like' question.id %}"></span>
-                <div class="vote-rating">
-                    <span id="q-rating-{{ question.id }}">{{ question.rating }}</span>
+                      data-action-url="{% url 'qa:ajax-question-like' question.id %}"></span>
+                    <div class="vote-rating">
+                        <span id="q-rating-{{ question.id }}">{{ question.rating }}</span>
+                    </div>
+                    <span class="glyphicon glyphicon-triangle-bottom q-dislike"
+                          data-action-url="{% url 'qa:ajax-question-dislike' question.id %}" title='test'></span>
                 </div>
-                <span class="glyphicon glyphicon-triangle-bottom q-dislike"
-                      href="{% url 'qa:ajax-question-dislike' question.id %}" title='test'></span>
+
             </div>
 
-        </div>
+            <hr class="question-hr">
+        {% endfor %}
 
-        <hr class="question-hr">
-    {% endfor %}
-
-{% endblock %}
+    {% endblock %}
 
 
-{% block pagination %}
-    {% if questions.paginator.num_pages > 1 %}
-        <div id="pagination">
-            <div class="row">
-                <div class="col-md-7 col-sm-9">
-                    <nav aria-label="navigation">
-                        <ul class="pager">
-                            {% if questions.has_previous %}
-                                <li>
-                                    <a href="?page={{ questions.previous_page_number }}">Previous</a>
-                                </li>
-                            {% endif %}
+    {% block pagination %}
+        {% if questions.paginator.num_pages > 1 %}
+            <div id="pagination">
+                <div class="row">
+                    <div class="col-md-7 col-sm-9">
+                        <nav aria-label="navigation">
+                            <ul class="pager">
+                                {% if questions.has_previous %}
+                                    <li>
+                                        <a href="?page={{ questions.previous_page_number }}">Previous</a>
+                                    </li>
+                                {% endif %}
 
-                            <span class="current">
+                                <span class="current">
                                             page {{ questions.number }} of {{ questions.paginator.num_pages }}.
                                         </span>
 
 
-                            {% if questions.has_next %}
-                                <li>
-                                    <a href="?page={{ questions.next_page_number }}">Next</a>
-                                </li>
-                            {% endif %}
-                        </ul>
-                    </nav>
+                                {% if questions.has_next %}
+                                    <li>
+                                        <a href="?page={{ questions.next_page_number }}">Next</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
             </div>
-        </div>
-    {% endif %}
-{% endblock %}
+        {% endif %}
+    {% endblock %}
 
+    {% block script %}
+        <script>
+            $(document).ready(
+                addQuestionsEventHandler()
+            )
+        </script>
+    {% endblock %}
 
-{% block script %}
-    <script>
-        $(document).ready(
-            addQuestionsEventHandler()
-        )
-    </script>
-{% endblock %}
-
-
-
-
-
-
-
+{% endspaceless %}

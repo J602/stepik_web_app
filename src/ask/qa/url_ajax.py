@@ -16,7 +16,7 @@ urlpatterns = [
     url(r'ajax/answer/correct/(?P<id>\d+)/$', views.ajax_answer_correct, name='ajax-answer-correct'),
     url(r'ajax/answer/add/(?P<id>\d+)/$', views.ajax_add_answer, name='ajax-add-answer'),
     url(r'ajax/answer/edit/$', views.ajax_edit_answer, name='ajax-edit-answer'),
-    url(r'ajax/answer/remove/(?P<id>\d+)/$', views.ajax_remove_answer, name='ajax-remove-answer'),
+    url(r'ajax/answer/remove/$', views.ajax_remove_answer, name='ajax-remove-answer'),
 
-    url(r'github/$', views.ajax_test, name='my-github'),
+    url(r'github/$', views.my_github, name='my-github'),
     ]
